@@ -12,12 +12,11 @@ export interface RegisterPayload {
 }
 
 export interface LoginPayload {
-  user: User;
-  accessToken: string;
-  refreshToken?: string;
+  email: string;
+  password: string;
 }
 
-export type Role = OrgRole;;
+export type Role = OrgRole;
 
 export interface User {
   id: string;
