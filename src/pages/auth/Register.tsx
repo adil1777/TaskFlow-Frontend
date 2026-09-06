@@ -3,9 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { register as registerUser } from "../../api/auth.api";
-import type { RegisterFormData } from "../../types/auth";
+import type { RegisterFormData } from "../../utils/types/auth";
 import { registerSchema } from "../../utils/validations/registerSchema";
-
 
 const Register = () => {
   const navigate = useNavigate();
