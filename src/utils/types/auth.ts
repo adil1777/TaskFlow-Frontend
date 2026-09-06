@@ -1,5 +1,6 @@
 import type z from "zod";
 import type { registerSchema } from "../validations/registerSchema";
+import type { OrgRole } from "./role";
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -11,11 +12,12 @@ export interface RegisterPayload {
 }
 
 export interface LoginPayload {
-  email: string;
-  password: string;
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
 }
 
-export type Role = "org_admin" | "member";
+export type Role = OrgRole;;
 
 export interface User {
   id: string;
@@ -28,5 +30,23 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken?: string;
   organizationId: string;
-  role: Role;
+  role: OrgRole;
+}
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+}
+
+export interface OrganizationState {
+  organizationId: string | null;
+  role: OrgRole | null;
+}
+
+export interface UIState {
+  sidebarOpen: boolean;
+  theme: "light" | "dark";
+  globalLoading: boolean;
 }
