@@ -7,6 +7,8 @@ import NotFound from "../pages/NotFound";
 
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
+import Projects from "../pages/projects/Projects";
+import ProjectDetails from "../pages/projects/ProjectDetails";
 
 const AppRoutes = () => {
   return (
@@ -21,6 +23,10 @@ const AppRoutes = () => {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
+
+          <Route path="/projects" element={<Projects />} />
+
+          <Route path="/projects/:projectId" element={<ProjectDetails />} />
         </Route>
       </Route>
 

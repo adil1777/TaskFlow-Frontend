@@ -16,6 +16,12 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface AuthLoginPayload {
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
+}
+
 export type Role = OrgRole;
 
 export interface User {
