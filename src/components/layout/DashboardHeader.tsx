@@ -1,7 +1,4 @@
-import {
-  Menu,
-  X,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import type { OrgRole } from "../../utils/types/role";
 
@@ -18,47 +15,31 @@ const DashboardHeader = ({
   sidebarOpen,
   onToggleSidebar,
 }: DashboardHeaderProps) => {
-  const displayName =
-    userName?.trim() || "User";
-
-  const displayRole =
-    role?.replaceAll("_", " ") || "member";
-
-  const userInitial =
-    displayName.charAt(0).toUpperCase();
+  const displayName = userName?.trim() || "User";
+  const displayRole = role?.replaceAll("_", " ") || "member";
+  const userInitial = displayName.charAt(0).toUpperCase() || "U";
 
   return (
     <>
       {/* Mobile Header */}
-      <header className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:hidden">
+      <header className="fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:hidden">
         <button
           type="button"
           onClick={onToggleSidebar}
           aria-label={
-            sidebarOpen
-              ? "Close navigation"
-              : "Open navigation"
+            sidebarOpen ? "Close navigation" : "Open navigation"
           }
           aria-expanded={sidebarOpen}
           className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
         >
-          {sidebarOpen ? (
-            <X size={22} />
-          ) : (
-            <Menu size={22} />
-          )}
+          {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
         <h1 className="text-lg font-bold text-slate-900">
           TaskFlow
         </h1>
 
-        <div
-          aria-label={`Logged in as ${displayName}`}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white"
-        >
-          {userInitial || "U"}
-        </div>
+        <div className="w-10" />
       </header>
 
       {/* Desktop Header */}
@@ -84,8 +65,11 @@ const DashboardHeader = ({
             </p>
           </div>
 
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-            {userInitial || "U"}
+          <div
+            aria-label={`Logged in as ${displayName}`}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white"
+          >
+            {userInitial}
           </div>
         </div>
       </header>

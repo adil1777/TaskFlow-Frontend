@@ -14,14 +14,6 @@ const user = authStorage.getUser();
 const organizationId = authStorage.getOrganizationId();
 const role = authStorage.getRole();
 
-console.log("RESTORED AUTH DATA:", {
-  accessToken,
-  refreshToken,
-  user,
-  organizationId,
-  role,
-});
-
 const isAuthenticated = Boolean(accessToken && user && organizationId && role);
 
 const preloadedAuthState: AuthState = {

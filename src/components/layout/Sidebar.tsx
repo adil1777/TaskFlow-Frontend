@@ -13,8 +13,6 @@ import { ORG_ROLES } from "../../utils/types/role";
 
 interface SidebarProps {
   open: boolean;
-  userName?: string | null;
-  userEmail?: string | null;
   role?: OrgRole | null;
   onClose: () => void;
   onLogout: () => void;
@@ -22,20 +20,11 @@ interface SidebarProps {
 
 const Sidebar = ({
   open,
-  userName,
-  userEmail,
   role,
   onClose,
   onLogout,
 }: SidebarProps) => {
-  const displayName =
-    userName?.trim() || "User";
-
-  const userInitial =
-    displayName.charAt(0).toUpperCase();
-
-  const isOrgAdmin =
-    role === ORG_ROLES.ORG_ADMIN;
+  const isOrgAdmin = role === ORG_ROLES.ORG_ADMIN;
 
   const navItems = [
     {
@@ -83,9 +72,7 @@ const Sidebar = ({
           "border-r border-slate-200 bg-white",
           "transform transition-transform duration-200",
           "lg:translate-x-0",
-          open
-            ? "translate-x-0"
-            : "-translate-x-full",
+          open ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >
         {/* Logo */}
@@ -93,25 +80,6 @@ const Sidebar = ({
           <h1 className="text-xl font-bold text-slate-900">
             TaskFlow
           </h1>
-        </div>
-
-        {/* User */}
-        <div className="border-b border-slate-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-              {userInitial || "U"}
-            </div>
-
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-slate-900">
-                {displayName}
-              </p>
-
-              <p className="truncate text-xs text-slate-500">
-                {userEmail || "-"}
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Navigation */}
@@ -152,7 +120,7 @@ const Sidebar = ({
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 p-4">
+        <div className="absolute inset-x-0 bottom-0 border-t border-slate-200 p-4">
           <button
             type="button"
             onClick={onLogout}

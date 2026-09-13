@@ -11,9 +11,7 @@ import Sidebar from "../components/layout/Sidebar";
 const DashboardLayout = () => {
   const navigate = useNavigate();
 
-  const {
-    logout,
-  } = useAuth();
+  const { logout } = useAuth();
 
   const {
     isOpen: sidebarOpen,
@@ -31,7 +29,6 @@ const DashboardLayout = () => {
 
   const handleLogout = () => {
     logout();
-
     closeSidebar();
 
     navigate("/login", {
@@ -50,8 +47,6 @@ const DashboardLayout = () => {
 
       <Sidebar
         open={sidebarOpen}
-        userName={user?.name}
-        userEmail={user?.email}
         role={role}
         onClose={closeSidebar}
         onLogout={handleLogout}
