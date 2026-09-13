@@ -31,11 +31,17 @@ export interface User {
 }
 
 export interface AuthResponse {
-  user: User;
-  accessToken: string;
-  refreshToken?: string;
-  organizationId: string;
-  role: OrgRole;
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    organization: {
+      id: string;
+      role: OrgRole;
+    };
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 export interface AuthState {

@@ -4,14 +4,10 @@ import type { OrgRole } from "../utils/types/role";
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const USER_KEY = "user";
-const ROLE_KEY = "role";
 const ORGANIZATION_ID_KEY = "organizationId";
+const ROLE_KEY = "role";
 
 export const authStorage = {
-  // =========================
-  // Access Token
-  // =========================
-
   getAccessToken(): string | null {
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   },
@@ -19,10 +15,6 @@ export const authStorage = {
   setAccessToken(token: string): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
   },
-
-  // =========================
-  // Refresh Token
-  // =========================
 
   getRefreshToken(): string | null {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -32,18 +24,12 @@ export const authStorage = {
     localStorage.setItem(REFRESH_TOKEN_KEY, token);
   },
 
-  // =========================
-  // User
-  // =========================
-
   getUser(): User | null {
+    const storedUser = localStorage.getItem(USER_KEY);
+    if (!storedUser) {
+      return null;
+    }
     try {
-      const storedUser = localStorage.getItem(USER_KEY);
-
-      if (!storedUser) {
-        return null;
-      }
-
       return JSON.parse(storedUser) as User;
     } catch {
       localStorage.removeItem(USER_KEY);
@@ -55,10 +41,6 @@ export const authStorage = {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   },
 
-  // =========================
-  // Organization
-  // =========================
-
   getOrganizationId(): string | null {
     return localStorage.getItem(ORGANIZATION_ID_KEY);
   },
@@ -67,21 +49,14 @@ export const authStorage = {
     localStorage.setItem(ORGANIZATION_ID_KEY, organizationId);
   },
 
-  // =========================
-  // Role
-  // =========================
-
   getRole(): OrgRole | null {
-    return localStorage.getItem(ROLE_KEY) as OrgRole | null;
+    const role = localStorage.getItem(ROLE_KEY);
+    return role as OrgRole | null;
   },
 
   setRole(role: OrgRole): void {
     localStorage.setItem(ROLE_KEY, role);
   },
-
-  // =========================
-  // Set Complete Auth
-  // =========================
 
   setAuth(
     accessToken: string,
@@ -94,27 +69,18 @@ export const authStorage = {
     this.setUser(user);
     this.setOrganizationId(organizationId);
     this.setRole(role);
-
     if (refreshToken) {
       this.setRefreshToken(refreshToken);
     }
   },
 
-  // =========================
-  // Clear Auth
-  // =========================
-
   clearAuth(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
-    localStorage.removeItem(ROLE_KEY);
     localStorage.removeItem(ORGANIZATION_ID_KEY);
+    localStorage.removeItem(ROLE_KEY);
   },
-
-  // =========================
-  // Check Authentication
-  // =========================
 
   hasAccessToken(): boolean {
     return Boolean(this.getAccessToken());

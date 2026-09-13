@@ -28,11 +28,11 @@ const Login = () => {
       });
 
       saveAuth(
-        response.accessToken,
-        response.user,
-        response.organizationId,
-        response.role,
-        response.refreshToken
+        response.data.accessToken,
+        response.data.user,
+        response.data.organization.id,
+        response.data.organization.role,
+        response.data.refreshToken
       );
 
       navigate("/dashboard");

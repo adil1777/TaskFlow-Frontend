@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-import type { OrgRole } from "../../utils/types/role";
 import type { OrganizationState } from "../../utils/types/auth";
+import type { OrgRole } from "../../utils/types/role";
 
 const initialState: OrganizationState = {
   organizationId: null,
@@ -10,9 +9,7 @@ const initialState: OrganizationState = {
 
 const organizationSlice = createSlice({
   name: "organization",
-
   initialState,
-
   reducers: {
     setOrganization: (
       state,
@@ -21,6 +18,7 @@ const organizationSlice = createSlice({
         role: OrgRole;
       }>
     ) => {
+
       state.organizationId = action.payload.organizationId;
       state.role = action.payload.role;
     },
@@ -30,19 +28,13 @@ const organizationSlice = createSlice({
       state.role = null;
     },
 
-    updateOrganizationRole: (
-      state,
-      action: PayloadAction<OrgRole>
-    ) => {
+    updateOrganizationRole: (state, action: PayloadAction<OrgRole>) => {
       state.role = action.payload;
     },
   },
 });
 
-export const {
-  setOrganization,
-  clearOrganization,
-  updateOrganizationRole,
-} = organizationSlice.actions;
+export const { setOrganization, clearOrganization, updateOrganizationRole } =
+  organizationSlice.actions;
 
 export default organizationSlice.reducer;
