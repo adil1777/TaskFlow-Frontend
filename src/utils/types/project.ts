@@ -1,9 +1,7 @@
 import { z } from "zod";
 import type { createProjectSchema } from "../validations/projectSchema";
 
-export type CreateProjectFormData = z.infer<
-  typeof createProjectSchema
->;
+export type CreateProjectFormData = z.infer<typeof createProjectSchema>;
 
 export interface CreateProjectModalProps {
   open: boolean;
@@ -12,15 +10,16 @@ export interface CreateProjectModalProps {
 
 export interface Project {
   id: string;
-  name: string;
-  description?: string | null;
   organizationId: string;
+  name: string;
+  description: string | null;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface ProjectsResponse {
-  data: Project[];
+  projects: Project[];
   total: number;
   page: number;
   limit: number;
@@ -35,5 +34,3 @@ export interface UpdateProjectPayload {
   name?: string;
   description?: string;
 }
-
-

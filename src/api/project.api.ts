@@ -17,7 +17,7 @@ export const getProjects = async (
     },
   });
 
-  return response.data;
+  return response.data.data;
 };
 
 export const getProjectById = async (

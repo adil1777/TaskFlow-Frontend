@@ -10,10 +10,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-import {
-  useDeleteProject,
-  useProjects,
-} from "../../hooks/useProjects";
+import { useDeleteProject, useProjects } from "../../hooks/useProjects";
 
 import { useAppSelector } from "../../redux/hooks";
 
@@ -26,62 +23,34 @@ const PROJECTS_PER_PAGE = 9;
 const Projects = () => {
   const navigate = useNavigate();
 
-  const [createModalOpen, setCreateModalOpen] =
-    useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [page, setPage] = useState(1);
 
-  const role = useAppSelector(
-    (state) => state.organization.role
-  );
+  const role = useAppSelector((state) => state.organization.role);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    isFetching,
-    refetch,
-  } = useProjects(
+  const { data, isLoading, isError, isFetching, refetch } = useProjects(
     page,
     PROJECTS_PER_PAGE
   );
 
-  const deleteProjectMutation =
-    useDeleteProject();
+  const deleteProjectMutation = useDeleteProject();
 
-  const projects = data?.data ?? [];
+  const projects = data?.projects ?? [];
   const total = data?.total ?? 0;
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(
-      total / PROJECTS_PER_PAGE
-    )
-  );
+  const totalPages = Math.max(1, Math.ceil(total / PROJECTS_PER_PAGE));
 
-  const isOrgAdmin =
-    role === ORG_ROLES.ORG_ADMIN;
+  const isOrgAdmin = role === ORG_ROLES.ORG_ADMIN;
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      page > totalPages &&
-      totalPages > 0
-    ) {
+    if (!isLoading && page > totalPages && totalPages > 0) {
       setPage(totalPages);
     }
-  }, [
-    page,
-    totalPages,
-    isLoading,
-  ]);
+  }, [page, totalPages, isLoading]);
 
-  const handleDelete = async (
-    projectId: string
-  ) => {
-    if (
-      deleteProjectMutation.isPending
-    ) {
+  const handleDelete = async (projectId: string) => {
+    if (deleteProjectMutation.isPending) {
       return;
     }
 
@@ -94,24 +63,13 @@ const Projects = () => {
     }
 
     try {
-      await deleteProjectMutation.mutateAsync(
-        projectId
-      );
+      await deleteProjectMutation.mutateAsync(projectId);
 
-      if (
-        projects.length === 1 &&
-        page > 1
-      ) {
-        setPage(
-          (currentPage) =>
-            currentPage - 1
-        );
+      if (projects.length === 1 && page > 1) {
+        setPage((currentPage) => currentPage - 1);
       }
     } catch (error) {
-      console.error(
-        "Failed to delete project:",
-        error
-      );
+      console.error("Failed to delete project:", error);
     }
   };
 
@@ -183,8 +141,7 @@ const Projects = () => {
             dark:text-red-400
           "
         >
-          Something went wrong while loading
-          your projects.
+          Something went wrong while loading your projects.
         </p>
 
         <button
@@ -239,9 +196,7 @@ const Projects = () => {
         {isOrgAdmin && (
           <button
             type="button"
-            onClick={() =>
-              setCreateModalOpen(true)
-            }
+            onClick={() => setCreateModalOpen(true)}
             className="
               inline-flex items-center
               justify-center gap-2
@@ -330,9 +285,7 @@ const Projects = () => {
           {isOrgAdmin && (
             <button
               type="button"
-              onClick={() =>
-                setCreateModalOpen(true)
-              }
+              onClick={() => setCreateModalOpen(true)}
               className="
                 mt-5 inline-flex
                 items-center gap-2
@@ -433,8 +386,7 @@ const Projects = () => {
                       dark:text-slate-400
                     "
                   >
-                    {project.description ||
-                      "No project description available."}
+                    {project.description || "No project description available."}
                   </p>
                 </div>
 
@@ -449,11 +401,7 @@ const Projects = () => {
                 >
                   <button
                     type="button"
-                    onClick={() =>
-                      navigate(
-                        `/projects/${project.id}`
-                      )
-                    }
+                    onClick={() => navigate(`/projects/${project.id}`)}
                     className="
                       inline-flex
                       items-center gap-1
@@ -472,14 +420,8 @@ const Projects = () => {
                   {isOrgAdmin && (
                     <button
                       type="button"
-                      onClick={() =>
-                        handleDelete(
-                          project.id
-                        )
-                      }
-                      disabled={
-                        deleteProjectMutation.isPending
-                      }
+                      onClick={() => handleDelete(project.id)}
+                      disabled={deleteProjectMutation.isPending}
                       aria-label={`Delete ${project.name}`}
                       title="Delete project"
                       className="
@@ -506,15 +448,8 @@ const Projects = () => {
             <div className="mt-8 flex items-center justify-center gap-2">
               <button
                 type="button"
-                disabled={
-                  page === 1 || isFetching
-                }
-                onClick={() =>
-                  setPage(
-                    (currentPage) =>
-                      currentPage - 1
-                  )
-                }
+                disabled={page === 1 || isFetching}
+                onClick={() => setPage((currentPage) => currentPage - 1)}
                 className="
                   rounded-lg
                   border border-slate-300
@@ -544,16 +479,8 @@ const Projects = () => {
 
               <button
                 type="button"
-                disabled={
-                  page === totalPages ||
-                  isFetching
-                }
-                onClick={() =>
-                  setPage(
-                    (currentPage) =>
-                      currentPage + 1
-                  )
-                }
+                disabled={page === totalPages || isFetching}
+                onClick={() => setPage((currentPage) => currentPage + 1)}
                 className="
                   rounded-lg
                   border border-slate-300
@@ -577,9 +504,7 @@ const Projects = () => {
 
       <CreateProjectModal
         open={createModalOpen}
-        onClose={() =>
-          setCreateModalOpen(false)
-        }
+        onClose={() => setCreateModalOpen(false)}
       />
     </div>
   );
