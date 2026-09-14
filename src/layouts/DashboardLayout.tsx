@@ -1,9 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "../redux/hooks";
-
 import { useAuth } from "../hooks/useAuth";
-import { useSidebar } from "../hooks/useSidebar";
 
 import DashboardHeader from "../components/layout/DashboardHeader";
 import Sidebar from "../components/layout/Sidebar";
@@ -12,12 +10,6 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
 
   const { logout } = useAuth();
-
-  const {
-    isOpen: sidebarOpen,
-    toggleSidebar,
-    closeSidebar,
-  } = useSidebar();
 
   const user = useAppSelector(
     (state) => state.auth.user
@@ -29,7 +21,6 @@ const DashboardLayout = () => {
 
   const handleLogout = () => {
     logout();
-    closeSidebar();
 
     navigate("/login", {
       replace: true,
@@ -37,18 +28,22 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div
+      className="
+        min-h-screen
+        bg-slate-50
+        text-slate-900
+        dark:bg-slate-950
+        dark:text-white
+      "
+    >
       <DashboardHeader
         userName={user?.name}
         role={role}
-        sidebarOpen={sidebarOpen}
-        onToggleSidebar={toggleSidebar}
       />
 
       <Sidebar
-        open={sidebarOpen}
         role={role}
-        onClose={closeSidebar}
         onLogout={handleLogout}
       />
 

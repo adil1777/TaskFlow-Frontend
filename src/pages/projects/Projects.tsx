@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 
 import {
-  FolderKanban,
-  Plus,
-  MoreVertical,
-  Trash2,
   ArrowRight,
+  FolderKanban,
+  MoreVertical,
+  Plus,
+  Trash2,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 
 import {
-  useProjects,
   useDeleteProject,
+  useProjects,
 } from "../../hooks/useProjects";
 
 import { useAppSelector } from "../../redux/hooks";
@@ -41,27 +41,27 @@ const Projects = () => {
     isError,
     isFetching,
     refetch,
-  } = useProjects(page, PROJECTS_PER_PAGE);
+  } = useProjects(
+    page,
+    PROJECTS_PER_PAGE
+  );
 
-  const deleteProjectMutation = useDeleteProject();
+  const deleteProjectMutation =
+    useDeleteProject();
 
   const projects = data?.data ?? [];
-  console.log("3333333333333333333333",projects);
-
   const total = data?.total ?? 0;
 
   const totalPages = Math.max(
     1,
-    Math.ceil(total / PROJECTS_PER_PAGE)
+    Math.ceil(
+      total / PROJECTS_PER_PAGE
+    )
   );
 
   const isOrgAdmin =
     role === ORG_ROLES.ORG_ADMIN;
 
-  /*
-   * If the current page becomes invalid after deletion,
-   * move the user back to the previous valid page.
-   */
   useEffect(() => {
     if (
       !isLoading &&
@@ -70,12 +70,18 @@ const Projects = () => {
     ) {
       setPage(totalPages);
     }
-  }, [page, totalPages, isLoading]);
+  }, [
+    page,
+    totalPages,
+    isLoading,
+  ]);
 
   const handleDelete = async (
     projectId: string
   ) => {
-    if (deleteProjectMutation.isPending) {
+    if (
+      deleteProjectMutation.isPending
+    ) {
       return;
     }
 
@@ -92,15 +98,14 @@ const Projects = () => {
         projectId
       );
 
-      /*
-       * If the current page contains only one project,
-       * move back one page after deletion.
-       */
       if (
         projects.length === 1 &&
         page > 1
       ) {
-        setPage((currentPage) => currentPage - 1);
+        setPage(
+          (currentPage) =>
+            currentPage - 1
+        );
       }
     } catch (error) {
       console.error(
@@ -113,23 +118,38 @@ const Projects = () => {
   if (isLoading) {
     return (
       <div>
-        {/* Header Skeleton */}
         <div className="mb-8">
-          <div className="h-8 w-40 animate-pulse rounded bg-slate-200" />
+          <div
+            className="
+              h-8 w-40 animate-pulse
+              rounded bg-slate-200
+              dark:bg-slate-800
+            "
+          />
 
-          <div className="mt-2 h-4 w-64 animate-pulse rounded bg-slate-200" />
+          <div
+            className="
+              mt-2 h-4 w-64 animate-pulse
+              rounded bg-slate-200
+              dark:bg-slate-800
+            "
+          />
         </div>
 
-        {/* Cards Skeleton */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map(
-            (_, index) => (
-              <div
-                key={index}
-                className="h-48 animate-pulse rounded-xl bg-slate-200"
-              />
-            )
-          )}
+          {Array.from({
+            length: 6,
+          }).map((_, index) => (
+            <div
+              key={index}
+              className="
+                h-48 animate-pulse
+                rounded-xl
+                bg-slate-200
+                dark:bg-slate-800
+              "
+            />
+          ))}
         </div>
       </div>
     );
@@ -137,20 +157,45 @@ const Projects = () => {
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6">
-        <h2 className="font-semibold text-red-700">
+      <div
+        className="
+          rounded-xl
+          border border-red-200
+          bg-red-50 p-6
+          dark:border-red-900/50
+          dark:bg-red-950/30
+        "
+      >
+        <h2
+          className="
+            font-semibold
+            text-red-700
+            dark:text-red-400
+          "
+        >
           Failed to load projects
         </h2>
 
-        <p className="mt-1 text-sm text-red-600">
-          Something went wrong while loading your
-          projects.
+        <p
+          className="
+            mt-1 text-sm
+            text-red-600
+            dark:text-red-400
+          "
+        >
+          Something went wrong while loading
+          your projects.
         </p>
 
         <button
           type="button"
           onClick={() => refetch()}
-          className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+          className="
+            mt-4 rounded-lg
+            bg-red-600 px-4 py-2
+            text-sm font-medium text-white
+            transition hover:bg-red-700
+          "
         >
           Try Again
         </button>
@@ -161,13 +206,32 @@ const Projects = () => {
   return (
     <div>
       {/* Header */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        className="
+          mb-8 flex flex-col gap-4
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+        "
+      >
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1
+            className="
+              text-2xl font-bold
+              text-slate-900
+              dark:text-white
+            "
+          >
             Projects
           </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p
+            className="
+              mt-1 text-sm
+              text-slate-500
+              dark:text-slate-400
+            "
+          >
             Manage all projects in your organization.
           </p>
         </div>
@@ -178,37 +242,86 @@ const Projects = () => {
             onClick={() =>
               setCreateModalOpen(true)
             }
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+            className="
+              inline-flex items-center
+              justify-center gap-2
+              rounded-lg
+              bg-slate-900 px-4 py-2.5
+              text-sm font-medium text-white
+              transition hover:bg-slate-800
+              dark:bg-white
+              dark:text-slate-900
+              dark:hover:bg-slate-200
+            "
           >
             <Plus size={18} />
-
             New Project
           </button>
         )}
       </div>
 
-      {/* Background Fetch Indicator */}
       {isFetching && !isLoading && (
-        <div className="mb-4 text-xs text-slate-400">
+        <div
+          className="
+            mb-4 text-xs
+            text-slate-400
+          "
+        >
           Updating projects...
         </div>
       )}
 
       {/* Empty State */}
       {projects.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+        <div
+          className="
+            flex min-h-[400px]
+            flex-col items-center
+            justify-center
+            rounded-xl
+            border border-dashed
+            border-slate-300
+            bg-white px-6
+            text-center
+            dark:border-slate-700
+            dark:bg-slate-900
+          "
+        >
+          <div
+            className="
+              flex h-14 w-14
+              items-center justify-center
+              rounded-full
+              bg-slate-100
+              dark:bg-slate-800
+            "
+          >
             <FolderKanban
               size={26}
-              className="text-slate-500"
+              className="
+                text-slate-500
+                dark:text-slate-400
+              "
             />
           </div>
 
-          <h2 className="mt-4 text-lg font-semibold text-slate-900">
+          <h2
+            className="
+              mt-4 text-lg font-semibold
+              text-slate-900
+              dark:text-white
+            "
+          >
             No projects yet
           </h2>
 
-          <p className="mt-1 max-w-sm text-sm text-slate-500">
+          <p
+            className="
+              mt-1 max-w-sm text-sm
+              text-slate-500
+              dark:text-slate-400
+            "
+          >
             {isOrgAdmin
               ? "Create your first project to start managing tasks and collaboration."
               : "There are currently no projects available in your organization."}
@@ -220,10 +333,19 @@ const Projects = () => {
               onClick={() =>
                 setCreateModalOpen(true)
               }
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+              className="
+                mt-5 inline-flex
+                items-center gap-2
+                rounded-lg
+                bg-slate-900 px-4 py-2.5
+                text-sm font-medium text-white
+                transition hover:bg-slate-800
+                dark:bg-white
+                dark:text-slate-900
+                dark:hover:bg-slate-200
+              "
             >
               <Plus size={18} />
-
               Create Project
             </button>
           )}
@@ -231,18 +353,44 @@ const Projects = () => {
       ) : (
         <>
           {/* Project Cards */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="
+              grid gap-5
+              sm:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="group rounded-xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-md"
+                className="
+                  group rounded-xl
+                  border border-slate-200
+                  bg-white p-5
+                  transition
+                  hover:-translate-y-0.5
+                  hover:shadow-md
+                  dark:border-slate-800
+                  dark:bg-slate-900
+                  dark:hover:shadow-slate-950/40
+                "
               >
-                {/* Card Header */}
                 <div className="flex items-start justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100">
+                  <div
+                    className="
+                      flex h-11 w-11
+                      items-center justify-center
+                      rounded-lg
+                      bg-slate-100
+                      dark:bg-slate-800
+                    "
+                  >
                     <FolderKanban
                       size={21}
-                      className="text-slate-700"
+                      className="
+                        text-slate-700
+                        dark:text-slate-300
+                      "
                     />
                   </div>
 
@@ -250,27 +398,55 @@ const Projects = () => {
                     <button
                       type="button"
                       aria-label={`Project actions for ${project.name}`}
-                      className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                      className="
+                        rounded-lg p-2
+                        text-slate-400
+                        transition
+                        hover:bg-slate-100
+                        hover:text-slate-700
+                        dark:hover:bg-slate-800
+                        dark:hover:text-slate-200
+                      "
                     >
                       <MoreVertical size={18} />
                     </button>
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="mt-5">
-                  <h2 className="truncate text-lg font-semibold text-slate-900">
+                  <h2
+                    className="
+                      truncate text-lg
+                      font-semibold
+                      text-slate-900
+                      dark:text-white
+                    "
+                  >
                     {project.name}
                   </h2>
 
-                  <p className="mt-2 line-clamp-3 min-h-[60px] text-sm text-slate-500">
+                  <p
+                    className="
+                      mt-2 line-clamp-3
+                      min-h-[60px] text-sm
+                      text-slate-500
+                      dark:text-slate-400
+                    "
+                  >
                     {project.description ||
                       "No project description available."}
                   </p>
                 </div>
 
-                {/* Footer */}
-                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+                <div
+                  className="
+                    mt-5 flex items-center
+                    justify-between
+                    border-t border-slate-100
+                    pt-4
+                    dark:border-slate-800
+                  "
+                >
                   <button
                     type="button"
                     onClick={() =>
@@ -278,10 +454,18 @@ const Projects = () => {
                         `/projects/${project.id}`
                       )
                     }
-                    className="inline-flex items-center gap-1 text-sm font-medium text-slate-700 transition hover:text-slate-900"
+                    className="
+                      inline-flex
+                      items-center gap-1
+                      text-sm font-medium
+                      text-slate-700
+                      transition
+                      hover:text-slate-900
+                      dark:text-slate-300
+                      dark:hover:text-white
+                    "
                   >
                     View Project
-
                     <ArrowRight size={15} />
                   </button>
 
@@ -289,14 +473,25 @@ const Projects = () => {
                     <button
                       type="button"
                       onClick={() =>
-                        handleDelete(project.id)
+                        handleDelete(
+                          project.id
+                        )
                       }
                       disabled={
                         deleteProjectMutation.isPending
                       }
                       aria-label={`Delete ${project.name}`}
                       title="Delete project"
-                      className="rounded-lg p-2 text-red-500 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="
+                        rounded-lg p-2
+                        text-red-500
+                        transition
+                        hover:bg-red-50
+                        dark:text-red-400
+                        dark:hover:bg-red-950/30
+                        disabled:cursor-not-allowed
+                        disabled:opacity-50
+                      "
                     >
                       <Trash2 size={17} />
                     </button>
@@ -320,12 +515,30 @@ const Projects = () => {
                       currentPage - 1
                   )
                 }
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="
+                  rounded-lg
+                  border border-slate-300
+                  bg-white px-4 py-2
+                  text-sm text-slate-700
+                  transition hover:bg-slate-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  dark:border-slate-700
+                  dark:bg-slate-900
+                  dark:text-slate-300
+                  dark:hover:bg-slate-800
+                "
               >
                 Previous
               </button>
 
-              <span className="px-3 text-sm text-slate-600">
+              <span
+                className="
+                  px-3 text-sm
+                  text-slate-600
+                  dark:text-slate-400
+                "
+              >
                 Page {page} of {totalPages}
               </span>
 
@@ -341,7 +554,19 @@ const Projects = () => {
                       currentPage + 1
                   )
                 }
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="
+                  rounded-lg
+                  border border-slate-300
+                  bg-white px-4 py-2
+                  text-sm text-slate-700
+                  transition hover:bg-slate-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-40
+                  dark:border-slate-700
+                  dark:bg-slate-900
+                  dark:text-slate-300
+                  dark:hover:bg-slate-800
+                "
               >
                 Next
               </button>
@@ -350,7 +575,6 @@ const Projects = () => {
         </>
       )}
 
-      {/* Create Project Modal */}
       <CreateProjectModal
         open={createModalOpen}
         onClose={() =>

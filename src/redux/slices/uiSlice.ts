@@ -1,4 +1,8 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+
 import type { UIState } from "../../utils/types/auth";
 
 const initialState: UIState = {
@@ -9,7 +13,6 @@ const initialState: UIState = {
 
 const uiSlice = createSlice({
   name: "ui",
-
   initialState,
 
   reducers: {
@@ -17,7 +20,10 @@ const uiSlice = createSlice({
       state.sidebarOpen = !state.sidebarOpen;
     },
 
-    setSidebarOpen: (state, action: PayloadAction<boolean>) => {
+    setSidebarOpen: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
       state.sidebarOpen = action.payload;
     },
 
