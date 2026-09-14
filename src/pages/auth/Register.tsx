@@ -22,24 +22,17 @@ const Register = () => {
     try {
       setServerError("");
 
-      const response = await registerUser({
+      await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
         organizationName: data.organizationName,
       });
 
-      localStorage.setItem("accessToken", response.accessToken);
-
-      if (response.refreshToken) {
-        localStorage.setItem("refreshToken", response.refreshToken);
-      }
-
-      localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("organizationId", response.organizationId);
-      localStorage.setItem("role", response.role);
-
-      navigate("/dashboard");
+      navigate("/login", {
+        replace: true,
+        state: { message: "Account created successfully. Please login." },
+      });
     } catch (error: any) {
       const details = error?.response?.data?.details;
 
