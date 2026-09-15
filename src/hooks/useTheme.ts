@@ -1,16 +1,15 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 import {
   useAppDispatch,
   useAppSelector,
 } from "../redux/hooks";
 
-import { setTheme } from "../redux/slices/uiSlice";
-
 import {
-  themeStorage,
-  type Theme,
-} from "../services/themeStorage";
+  toggleTheme as toggleThemeAction,
+} from "../redux/slices/uiSlice";
+
+import { themeStorage } from "../services/themeStorage";
 
 export const useTheme = () => {
   const dispatch = useAppDispatch();
@@ -20,26 +19,32 @@ export const useTheme = () => {
   );
 
   useEffect(() => {
-    document.documentElement.classList.toggle(
+    const root = document.documentElement;
+
+    root.classList.toggle(
       "dark",
       theme === "dark"
     );
 
     themeStorage.setTheme(theme);
+
+    console.log("THEME:", theme);
+    console.log(
+      "HTML:",
+      root.className
+    );
+    console.log(
+      "STORAGE:",
+      themeStorage.getTheme()
+    );
   }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    const nextTheme: Theme =
-      theme === "light"
-        ? "dark"
-        : "light";
-
-    dispatch(setTheme(nextTheme));
-  }, [dispatch, theme]);
 
   return {
     theme,
     isDarkMode: theme === "dark",
-    toggleTheme,
+
+    toggleTheme: () => {
+      dispatch(toggleThemeAction());
+    },
   };
 };

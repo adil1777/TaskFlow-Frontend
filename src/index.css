@@ -1,13 +1,24 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 * {
   box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+
   background: #f8fafc;
+  color: #0f172a;
+
   font-family:
     Inter,
     system-ui,
@@ -15,4 +26,13 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+html.dark body {
+  background: #020617;
+  color: #f8fafc;
 }
