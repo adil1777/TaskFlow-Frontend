@@ -17,8 +17,6 @@ export const getProjects = async (
     },
   });
 
-  console.log("response of project :",response.data);
-
   return response.data.data;
 };
 
@@ -27,16 +25,13 @@ export const getProjectById = async (
 ): Promise<Project> => {
   const response = await api.get(`/projects/${projectId}`);
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createProject = async (
   payload: CreateProjectPayload
 ): Promise<Project> => {
   const response = await api.post("/projects", payload);
-
-  console.log("response of create project :",response);
-  console.log("response of create project2222222 :",response.data);
 
   return response.data;
 };

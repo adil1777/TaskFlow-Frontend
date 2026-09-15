@@ -39,8 +39,6 @@ const Projects = () => {
   const projects = data?.projects ?? [];
   const total = data?.total ?? 0;
 
-  console.log("project response:",projects);
-
   const totalPages = Math.max(1, Math.ceil(total / PROJECTS_PER_PAGE));
 
   const isOrgAdmin = role === ORG_ROLES.ORG_ADMIN;

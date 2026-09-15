@@ -16,6 +16,10 @@ export interface Project {
   deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  organization: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface ProjectsResponse {
