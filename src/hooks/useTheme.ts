@@ -28,15 +28,6 @@ export const useTheme = () => {
 
     themeStorage.setTheme(theme);
 
-    console.log("THEME:", theme);
-    console.log(
-      "HTML:",
-      root.className
-    );
-    console.log(
-      "STORAGE:",
-      themeStorage.getTheme()
-    );
   }, [theme]);
 
   return {

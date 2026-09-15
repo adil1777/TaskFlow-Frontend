@@ -17,6 +17,8 @@ export const getProjects = async (
     },
   });
 
+  console.log("response of project :",response.data);
+
   return response.data.data;
 };
 

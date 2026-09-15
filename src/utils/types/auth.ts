@@ -1,6 +1,7 @@
 import type z from "zod";
 import type { registerSchema } from "../validations/registerSchema";
 import type { OrgRole } from "./role";
+import type { AxiosRequestConfig } from "axios";
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -60,4 +61,19 @@ export interface UIState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
   globalLoading: boolean;
+}
+
+export interface RetryableRequestConfig
+  extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
+export interface RefreshResponse {
+  data?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
+
+  accessToken?: string;
+  refreshToken?: string;
 }

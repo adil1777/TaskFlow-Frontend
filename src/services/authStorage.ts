@@ -26,9 +26,11 @@ export const authStorage = {
 
   getUser(): User | null {
     const storedUser = localStorage.getItem(USER_KEY);
+
     if (!storedUser) {
       return null;
     }
+
     try {
       return JSON.parse(storedUser) as User;
     } catch {
@@ -46,12 +48,23 @@ export const authStorage = {
   },
 
   setOrganizationId(organizationId: string): void {
-    localStorage.setItem(ORGANIZATION_ID_KEY, organizationId);
+    localStorage.setItem(
+      ORGANIZATION_ID_KEY,
+      organizationId
+    );
   },
 
   getRole(): OrgRole | null {
     const role = localStorage.getItem(ROLE_KEY);
-    return role as OrgRole | null;
+
+    if (
+      role !== "org_admin" &&
+      role !== "member"
+    ) {
+      return null;
+    }
+
+    return role;
   },
 
   setRole(role: OrgRole): void {
@@ -69,6 +82,7 @@ export const authStorage = {
     this.setUser(user);
     this.setOrganizationId(organizationId);
     this.setRole(role);
+
     if (refreshToken) {
       this.setRefreshToken(refreshToken);
     }
@@ -84,5 +98,9 @@ export const authStorage = {
 
   hasAccessToken(): boolean {
     return Boolean(this.getAccessToken());
+  },
+
+  hasRefreshToken(): boolean {
+    return Boolean(this.getRefreshToken());
   },
 };
