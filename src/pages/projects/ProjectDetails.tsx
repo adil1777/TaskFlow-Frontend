@@ -10,6 +10,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDeleteProject, useProject } from "../../hooks/useProjects";
 import { useAppSelector } from "../../redux/hooks";
 import { ORG_ROLES } from "../../utils/types/role";
+import { useProjectTasks } from "../../hooks/useTasks";
+import TaskTable from "../../components/tasks/TaskTable";
+import { useState } from "react";
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
@@ -27,6 +30,20 @@ const ProjectDetails = () => {
   const isOrgAdmin = role === ORG_ROLES.ORG_ADMIN;
 
   const isDeleting = deleteProjectMutation.isPending;
+
+  const [taskPage, setTaskPage] = useState(1);
+
+  const { data: tasksData, isLoading: tasksLoading } = useProjectTasks(
+    projectId || "",
+    taskPage,
+    10
+  );
+
+  const tasks = tasksData?.data || [];
+
+  const totalTasks = tasksData?.total || 0;
+
+  const totalTaskPages = Math.ceil(totalTasks / 10);
 
   const handleBackToProjects = () => {
     navigate("/projects");
@@ -286,97 +303,78 @@ const ProjectDetails = () => {
       </section>
 
       {/* Tasks */}
-      <section
-        aria-labelledby="project-tasks-heading"
-        className="
-          overflow-hidden
-          rounded-xl
-          border border-slate-200
-          bg-white
-          dark:border-slate-800
-          dark:bg-slate-900
-        "
-      >
-        <div
-          className="
-            flex flex-col gap-4
-            border-b border-slate-200
-            p-6
-            sm:flex-row
-            sm:items-center
-            sm:justify-between
-
-            dark:border-slate-800
-          "
-        >
+      <div className="mt-6">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2
-              id="project-tasks-heading"
-              className="
-                text-lg font-semibold
-                text-slate-900
-                dark:text-white
-              "
-            >
-              Tasks
-            </h2>
+            <h2 className="text-lg font-semibold text-slate-900">Tasks</h2>
 
-            <p
-              className="
-                mt-1 text-sm
-                text-slate-500
-                dark:text-slate-400
-              "
-            >
-              Tasks belonging to this project.
+            <p className="mt-1 text-sm text-slate-500">
+              Manage tasks belonging to this project.
             </p>
           </div>
 
-          <button
-            type="button"
-            disabled
-            title="Task creation is not available yet"
-            className="
-              inline-flex
-              items-center
-              justify-center
-              rounded-lg
-              bg-slate-900
-              px-4 py-2
-              text-sm font-medium
-              text-white
-              transition-colors
-              disabled:cursor-not-allowed
-              disabled:opacity-50
-
-              dark:bg-white
-              dark:text-slate-900
-            "
-          >
+          <button className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800">
             + Add Task
           </button>
         </div>
 
-        <div
-          className="
-            flex min-h-40
-            items-center
-            justify-center
-            p-8
-            text-center
-          "
-        >
-          <p
-            className="
-              text-sm
-              text-slate-500
-              dark:text-slate-400
-            "
-          >
-            No tasks available yet.
-          </p>
-        </div>
-      </section>
+        {tasksLoading ? (
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
+            <div className="space-y-4">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-12 animate-pulse rounded-lg bg-slate-100"
+                />
+              ))}
+            </div>
+          </div>
+        ) : tasks.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center">
+            <h3 className="font-semibold text-slate-900">No tasks yet</h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Create your first task for this project.
+            </p>
+
+            <button className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white">
+              Create Task
+            </button>
+          </div>
+        ) : (
+          <>
+            <TaskTable
+              tasks={tasks}
+              onTaskClick={(taskId) => navigate(`/tasks/${taskId}`)}
+            />
+
+            {/* Pagination */}
+            {totalTaskPages > 1 && (
+              <div className="mt-5 flex items-center justify-center gap-3">
+                <button
+                  disabled={taskPage === 1}
+                  onClick={() => setTaskPage((current) => current - 1)}
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+                >
+                  Previous
+                </button>
+
+                <span className="text-sm text-slate-600">
+                  Page {taskPage} of {totalTaskPages}
+                </span>
+
+                <button
+                  disabled={taskPage === totalTaskPages}
+                  onClick={() => setTaskPage((current) => current + 1)}
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
