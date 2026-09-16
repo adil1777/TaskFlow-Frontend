@@ -5,12 +5,14 @@ import type {
   TasksResponse,
   CreateTaskPayload,
   UpdateTaskPayload,
+  TaskFilters,
 } from "../utils/types/task";
 
 export const getProjectTasks = async (
   projectId: string,
   page = 1,
-  limit = 10
+  limit = 10,
+  filters?: TaskFilters
 ): Promise<TasksResponse> => {
   const response = await api.get(
     `/projects/${projectId}/tasks`,
@@ -18,6 +20,7 @@ export const getProjectTasks = async (
       params: {
         page,
         limit,
+        ...filters,
       },
     }
   );

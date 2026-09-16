@@ -14,49 +14,41 @@ import {
 import type {
   CreateTaskPayload,
   UpdateTaskPayload,
+  TaskFilters,
 } from "../utils/types/task";
-
-import { useAppSelector } from "../redux/hooks";
-
-import { taskQueryKeys } from "../utils/query/queryKeys";
 
 export const useProjectTasks = (
   projectId: string,
   page = 1,
-  limit = 10
+  limit = 10,
+  filters?: TaskFilters
 ) => {
-  const organizationId = useAppSelector(
-    (state) => state.organization.organizationId
-  );
-
   return useQuery({
-    queryKey:
-      organizationId && projectId
-        ? taskQueryKeys.projectList(
-            organizationId,
-            projectId,
-            page,
-            limit
-          )
-        : ["tasks", "disabled"],
+    queryKey: [
+      "project-tasks",
+      projectId,
+      page,
+      limit,
+      filters,
+    ],
 
     queryFn: () =>
-      getProjectTasks(projectId, page, limit),
+      getProjectTasks(
+        projectId,
+        page,
+        limit,
+        filters
+      ),
 
-    enabled:
-      Boolean(organizationId) &&
-      Boolean(projectId),
+    enabled: Boolean(projectId),
 
-    staleTime: 30_000,
+    placeholderData: (previousData) =>
+      previousData,
   });
 };
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
-
-  const organizationId = useAppSelector(
-    (state) => state.organization.organizationId
-  );
 
   return useMutation({
     mutationFn: ({
@@ -65,20 +57,15 @@ export const useCreateTask = () => {
     }: {
       projectId: string;
       payload: CreateTaskPayload;
-    }) => createTask(projectId, payload),
+    }) =>
+      createTask(projectId, payload),
 
     onSuccess: (_, variables) => {
-      if (!organizationId) {
-        return;
-      }
-
       queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.projectList(
-          organizationId,
+        queryKey: [
+          "project-tasks",
           variables.projectId,
-          1,
-          10
-        ),
+        ],
       });
     },
   });
@@ -87,10 +74,6 @@ export const useCreateTask = () => {
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
-  const organizationId = useAppSelector(
-    (state) => state.organization.organizationId
-  );
-
   return useMutation({
     mutationFn: ({
       taskId,
@@ -98,25 +81,17 @@ export const useUpdateTask = () => {
     }: {
       taskId: string;
       payload: UpdateTaskPayload;
-    }) => updateTask(taskId, payload),
+    }) =>
+      updateTask(taskId, payload),
 
-    onSuccess: (updatedTask) => {
-      if (!organizationId) {
-        return;
-      }
-
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.projectLists(),
+        queryKey: ["project-tasks"],
       });
 
-      if (updatedTask?.id) {
-        queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.detail(
-            organizationId,
-            updatedTask.id
-          ),
-        });
-      }
+      queryClient.invalidateQueries({
+        queryKey: ["task"],
+      });
     },
   });
 };
@@ -130,7 +105,7 @@ export const useDeleteTask = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: taskQueryKeys.projectLists(),
+        queryKey: ["project-tasks"],
       });
     },
   });

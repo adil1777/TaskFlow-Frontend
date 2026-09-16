@@ -36,6 +36,15 @@ export interface TasksResponse {
   limit: number;
 }
 
+export interface TaskFilters {
+  search?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  assigneeId?: string;
+  dueDateFrom?: string;
+  dueDateTo?: string;
+}
+
 export interface CreateTaskPayload {
   title: string;
   description?: string;
