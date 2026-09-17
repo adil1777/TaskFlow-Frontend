@@ -1,4 +1,4 @@
-import { CalendarDays, MoreHorizontal, UserRound } from "lucide-react";
+import { CalendarDays, Pencil, UserRound } from "lucide-react";
 
 import type { Task } from "../../utils/types/task";
 
@@ -65,6 +65,7 @@ const TaskTable = ({ tasks, onTaskClick, onEditTask }: TaskTableProps) => {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {tasks.map((task) => {
               const assignee = task.assignments?.[0];
+              const assigneeUser = assignee?.user;
 
               return (
                 <tr
@@ -105,7 +106,7 @@ const TaskTable = ({ tasks, onTaskClick, onEditTask }: TaskTableProps) => {
 
                   {/* Assignee */}
                   <td className="px-5 py-4">
-                    {assignee ? (
+                    {assigneeUser ? (
                       <div className="flex items-center gap-3">
                         <div
                           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800"
@@ -119,17 +120,17 @@ const TaskTable = ({ tasks, onTaskClick, onEditTask }: TaskTableProps) => {
 
                         <div className="min-w-0">
                           <p
-                            title={assignee.name}
+                            title={assigneeUser.name}
                             className="max-w-[180px] truncate text-sm font-medium text-slate-800 dark:text-slate-200"
                           >
-                            {assignee.name}
+                            {assigneeUser.name}
                           </p>
 
                           <p
-                            title={assignee.email}
+                            title={assigneeUser.email}
                             className="max-w-[180px] truncate text-xs text-slate-500 dark:text-slate-400"
                           >
-                            {assignee.email}
+                            {assigneeUser.email}
                           </p>
                         </div>
                       </div>
@@ -176,7 +177,7 @@ const TaskTable = ({ tasks, onTaskClick, onEditTask }: TaskTableProps) => {
                       }}
                       className="inline-flex items-center justify-center rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200 dark:focus:ring-slate-600 dark:focus:ring-offset-slate-900"
                     >
-                      <MoreHorizontal size={18} aria-hidden="true" />
+                      <Pencil size={17} aria-hidden="true" />
                     </button>
                   </td>
                 </tr>

@@ -33,7 +33,7 @@ export const getTaskById = async (
 ): Promise<Task> => {
   const response = await api.get(`/tasks/${taskId}`);
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createTask = async (
@@ -65,6 +65,31 @@ export const deleteTask = async (
 ) => {
   const response = await api.delete(
     `/tasks/${taskId}`
+  );
+
+  return response.data;
+};
+
+export const assignTask = async (
+  taskId: string,
+  userId: string
+) => {
+  const response = await api.post(
+    `/tasks/${taskId}/assign`,
+    {
+      userId,
+    }
+  );
+
+  return response.data;
+};
+
+export const unassignTask = async (
+  taskId: string,
+  userId: string
+) => {
+  const response = await api.delete(
+    `/tasks/${taskId}/assign/${userId}`
   );
 
   return response.data;

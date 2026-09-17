@@ -10,10 +10,20 @@ export type TaskPriority =
   | "high"
   | "urgent";
 
-export interface TaskAssignee {
+
+
+export interface TaskAssigneeUser {
   id: string;
   name: string;
   email: string;
+}
+
+export interface TaskAssignee {
+  id: string;
+  taskId: string;
+  userId: string;
+  assignedAt: string;
+  user: TaskAssigneeUser;
 }
 
 export interface Task {

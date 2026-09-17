@@ -9,6 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Projects from "../pages/projects/Projects";
 import ProjectDetails from "../pages/projects/ProjectDetails";
+import TaskDetails from "../pages/tasks/TaskDetails";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,9 @@ const AppRoutes = () => {
           <Route path="/projects" element={<Projects />} />
 
           <Route path="/projects/:projectId" element={<ProjectDetails />} />
+
+          <Route path="/tasks/:taskId" element={<TaskDetails />} />
+
         </Route>
       </Route>
 
