@@ -25,10 +25,19 @@ export const useProjectTasks = (
   limit = 10,
   filters?: TaskFilters
 ) => {
+  const { organizationId } = useAuth();
+
   return useQuery({
-    queryKey: ["project-tasks", projectId, page, limit, filters],
+    queryKey: [
+      ...taskQueryKeys.projectLists(),
+      organizationId ?? "",
+      projectId,
+      page,
+      limit,
+      filters,
+    ],
     queryFn: () => getProjectTasks(projectId, page, limit, filters),
-    enabled: Boolean(projectId),
+    enabled: Boolean(organizationId) && Boolean(projectId),
     placeholderData: (previousData) => previousData,
   });
 };
@@ -45,9 +54,9 @@ export const useCreateTask = () => {
       payload: CreateTaskPayload;
     }) => createTask(projectId, payload),
 
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["project-tasks", variables.projectId],
+        queryKey: taskQueryKeys.projectLists(),
       });
     },
   });
@@ -55,6 +64,7 @@ export const useCreateTask = () => {
 
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
+  const { organizationId } = useAuth();
 
   return useMutation({
     mutationFn: ({
@@ -65,28 +75,55 @@ export const useUpdateTask = () => {
       payload: UpdateTaskPayload;
     }) => updateTask(taskId, payload),
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      /*
+       * Refresh all project task lists.
+       *
+       * This ensures the updated task is also reflected
+       * wherever the project task list is displayed.
+       */
       queryClient.invalidateQueries({
-        queryKey: ["project-tasks"],
+        queryKey: taskQueryKeys.projectLists(),
       });
 
-      queryClient.invalidateQueries({
-        queryKey: ["task"],
-      });
+      /*
+       * Refresh the currently opened task details.
+       *
+       * useTask() uses:
+       * ["tasks", "detail", organizationId, taskId]
+       */
+      if (organizationId) {
+        queryClient.invalidateQueries({
+          queryKey: taskQueryKeys.detail(organizationId, variables.taskId),
+        });
+      }
     },
   });
 };
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
+  const { organizationId } = useAuth();
 
   return useMutation({
     mutationFn: (taskId: string) => deleteTask(taskId),
 
-    onSuccess: () => {
+    onSuccess: (_, taskId) => {
+      /*
+       * Refresh project task lists.
+       */
       queryClient.invalidateQueries({
-        queryKey: ["project-tasks"],
+        queryKey: taskQueryKeys.projectLists(),
       });
+
+      /*
+       * Remove the deleted task from detail cache.
+       */
+      if (organizationId) {
+        queryClient.removeQueries({
+          queryKey: taskQueryKeys.detail(organizationId, taskId),
+        });
+      }
     },
   });
 };
@@ -96,25 +133,23 @@ export const useAssignTask = () => {
   const { organizationId } = useAuth();
 
   return useMutation({
-    mutationFn: ({
-      taskId,
-      userId,
-    }: {
-      taskId: string;
-      userId: string;
-    }) => assignTask(taskId, userId),
+    mutationFn: ({ taskId, userId }: { taskId: string; userId: string }) =>
+      assignTask(taskId, userId),
 
     onSuccess: (_, variables) => {
+      /*
+       * Refresh project task lists.
+       */
       queryClient.invalidateQueries({
         queryKey: taskQueryKeys.projectLists(),
       });
 
+      /*
+       * Refresh task details.
+       */
       if (organizationId) {
         queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.detail(
-            organizationId,
-            variables.taskId
-          ),
+          queryKey: taskQueryKeys.detail(organizationId, variables.taskId),
         });
       }
     },
@@ -126,25 +161,23 @@ export const useUnassignTask = () => {
   const { organizationId } = useAuth();
 
   return useMutation({
-    mutationFn: ({
-      taskId,
-      userId,
-    }: {
-      taskId: string;
-      userId: string;
-    }) => unassignTask(taskId, userId),
+    mutationFn: ({ taskId, userId }: { taskId: string; userId: string }) =>
+      unassignTask(taskId, userId),
 
     onSuccess: (_, variables) => {
+      /*
+       * Refresh project task lists.
+       */
       queryClient.invalidateQueries({
         queryKey: taskQueryKeys.projectLists(),
       });
 
+      /*
+       * Refresh task details.
+       */
       if (organizationId) {
         queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.detail(
-            organizationId,
-            variables.taskId
-          ),
+          queryKey: taskQueryKeys.detail(organizationId, variables.taskId),
         });
       }
     },
@@ -155,10 +188,7 @@ export const useTask = (taskId: string) => {
   const { organizationId } = useAuth();
 
   return useQuery({
-    queryKey: taskQueryKeys.detail(
-      organizationId ?? "",
-      taskId
-    ),
+    queryKey: taskQueryKeys.detail(organizationId ?? "", taskId),
     queryFn: () => getTaskById(taskId),
     enabled: Boolean(organizationId) && Boolean(taskId),
   });

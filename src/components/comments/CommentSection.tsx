@@ -10,7 +10,9 @@ interface CommentSectionProps {
 const CommentSection = ({ taskId }: CommentSectionProps) => {
   const { data, isLoading, isError, refetch } = useTaskComments(taskId);
 
-  const comments = data?.data ?? [];
+  const comments = [...(data?.data ?? [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 
   return (
     <section
