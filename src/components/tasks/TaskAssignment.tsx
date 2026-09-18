@@ -21,8 +21,8 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
   /**
    * Store user IDs, not assignment IDs.
    *
-   * TaskAssignee.id      -> assignment ID
-   * TaskAssignee.userId  -> assigned user's ID
+   * TaskAssignee.id     -> assignment ID
+   * TaskAssignee.userId -> assigned user's ID
    */
   const assignedUserIds = new Set(
     assignedUsers.map((assignment) => assignment.userId)
@@ -65,21 +65,45 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Assigned Users */}
+      {/* Assigned Members */}
       <div>
         <div className="mb-3 flex items-center gap-2">
-          <UserRound size={17} className="text-slate-600" aria-hidden="true" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+            <UserRound
+              size={16}
+              className="text-slate-600 dark:text-slate-400"
+              aria-hidden="true"
+            />
+          </div>
 
-          <h3 className="text-sm font-semibold text-slate-800">
-            Assigned Members
-          </h3>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+              Assigned Members
+            </h3>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              People currently working on this task.
+            </p>
+          </div>
         </div>
 
         {assignedUsers.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-5">
-            <p className="text-sm text-slate-500">
-              No members assigned to this task.
-            </p>
+          <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-5 dark:border-slate-700 dark:bg-slate-800/60">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-slate-400 dark:bg-slate-900 dark:text-slate-500">
+                <UserRound size={17} aria-hidden="true" />
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  No members assigned
+                </p>
+
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                  Assign a team member below to start working on this task.
+                </p>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-wrap gap-3">
@@ -89,11 +113,11 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
               return (
                 <div
                   key={assignment.id}
-                  className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5"
+                  className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 transition-colors dark:border-slate-800 dark:bg-slate-800/60"
                 >
                   {/* Avatar */}
                   <div
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700 dark:bg-slate-700 dark:text-slate-200"
                     aria-hidden="true"
                   >
                     {user.name.charAt(0).toUpperCase()}
@@ -103,14 +127,14 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
                   <div className="min-w-0">
                     <p
                       title={user.name}
-                      className="max-w-[180px] truncate text-sm font-medium text-slate-800"
+                      className="max-w-[180px] truncate text-sm font-medium text-slate-900 dark:text-white"
                     >
                       {user.name}
                     </p>
 
                     <p
                       title={user.email}
-                      className="max-w-[220px] truncate text-xs text-slate-500"
+                      className="max-w-[220px] truncate text-xs text-slate-500 dark:text-slate-400"
                     >
                       {user.email}
                     </p>
@@ -123,7 +147,7 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
                     disabled={unassignMutation.isPending}
                     aria-label={`Unassign ${user.name}`}
                     title="Unassign member"
-                    className="ml-1 rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="ml-1 shrink-0 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-slate-700 dark:hover:text-slate-200 dark:focus:ring-slate-500 dark:focus:ring-offset-slate-900"
                   >
                     <X size={15} aria-hidden="true" />
                   </button>
@@ -137,15 +161,23 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
       {/* Assign Member */}
       <div>
         <div className="mb-3 flex items-center gap-2">
-          <UserRoundPlus
-            size={17}
-            className="text-slate-600"
-            aria-hidden="true"
-          />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+            <UserRoundPlus
+              size={16}
+              className="text-slate-600 dark:text-slate-400"
+              aria-hidden="true"
+            />
+          </div>
 
-          <h3 className="text-sm font-semibold text-slate-800">
-            Assign Member
-          </h3>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+              Assign Member
+            </h3>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Add another organization member to this task.
+            </p>
+          </div>
         </div>
 
         <select
@@ -157,7 +189,7 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
             availableMembers.length === 0
           }
           aria-label="Assign member to task"
-          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:border-slate-600 dark:focus:border-slate-500 dark:focus:ring-slate-800 dark:disabled:bg-slate-800 dark:disabled:text-slate-500"
         >
           <option value="">
             {isLoading
@@ -179,7 +211,7 @@ const TaskAssignment = ({ task }: TaskAssignmentProps) => {
         {availableMembers.length === 0 &&
           !isLoading &&
           assignedUsers.length > 0 && (
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               All available organization members are already assigned.
             </p>
           )}

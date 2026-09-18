@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   ArrowLeft,
   CalendarDays,
@@ -9,13 +11,7 @@ import {
   useParams,
 } from "react-router-dom";
 
-import {
-  useState,
-} from "react";
-
-import {
-  useTask,
-} from "../../hooks/useTasks";
+import { useTask } from "../../hooks/useTasks";
 
 import TaskStatusBadge from "../../components/tasks/TaskStatusBadge";
 import TaskPriorityBadge from "../../components/tasks/TaskPriorityBadge";
@@ -24,16 +20,13 @@ import CommentSection from "../../components/comments/CommentSection";
 import TaskFormModal from "../../components/tasks/TaskFormModal";
 
 const TaskDetails = () => {
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const { taskId } =
-    useParams<{
-      taskId: string;
-    }>();
+  const { taskId } = useParams<{
+    taskId: string;
+  }>();
 
-  const [editModalOpen, setEditModalOpen] =
-    useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const {
     data: task,
@@ -42,88 +35,357 @@ const TaskDetails = () => {
     refetch,
   } = useTask(taskId || "");
 
+  /* --------------------------------------------------
+   * Invalid Task ID
+   * -------------------------------------------------- */
+
   if (!taskId) {
     return (
-      <div className="p-6">
-        <p className="text-sm text-red-500">
-          Invalid task ID.
+      <div
+        className="
+          rounded-xl
+          border border-red-200
+          bg-red-50 p-6
+          dark:border-red-900/50
+          dark:bg-red-950/30
+        "
+      >
+        <h2
+          className="
+            font-semibold
+            text-red-700
+            dark:text-red-400
+          "
+        >
+          Invalid task
+        </h2>
+
+        <p
+          className="
+            mt-1 text-sm
+            text-red-600
+            dark:text-red-400
+          "
+        >
+          The task ID provided is invalid.
         </p>
+
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="
+            mt-4 inline-flex
+            items-center gap-2
+            rounded-lg
+            bg-slate-900 px-4 py-2.5
+            text-sm font-medium text-white
+            transition hover:bg-slate-800
+            dark:bg-white
+            dark:text-slate-900
+            dark:hover:bg-slate-200
+          "
+        >
+          <ArrowLeft size={16} />
+          Go Back
+        </button>
       </div>
     );
   }
+
+  /* --------------------------------------------------
+   * Loading State
+   * -------------------------------------------------- */
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-5xl p-6">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 w-1/3 rounded bg-slate-200" />
+      <div>
+        {/* Header Skeleton */}
+        <div
+          className="
+            mb-8 flex flex-col gap-4
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+          "
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="
+                mt-1 h-9 w-9
+                animate-pulse
+                rounded-lg
+                bg-slate-200
+                dark:bg-slate-800
+              "
+            />
 
-          <div className="h-48 rounded-2xl bg-slate-200" />
+            <div>
+              <div
+                className="
+                  h-4 w-24
+                  animate-pulse
+                  rounded
+                  bg-slate-200
+                  dark:bg-slate-800
+                "
+              />
 
-          <div className="h-40 rounded-2xl bg-slate-200" />
+              <div
+                className="
+                  mt-2 h-8 w-64
+                  animate-pulse
+                  rounded
+                  bg-slate-200
+                  dark:bg-slate-800
+                "
+              />
+            </div>
+          </div>
+
+          <div
+            className="
+              h-10 w-28
+              animate-pulse
+              rounded-lg
+              bg-slate-200
+              dark:bg-slate-800
+            "
+          />
         </div>
+
+        {/* Information Skeleton */}
+        <div
+          className="
+            rounded-xl
+            border border-slate-200
+            bg-white p-6
+            dark:border-slate-800
+            dark:bg-slate-900
+          "
+        >
+          <div
+            className="
+              h-6 w-40
+              animate-pulse
+              rounded
+              bg-slate-200
+              dark:bg-slate-800
+            "
+          />
+
+          <div className="mt-5 space-y-2">
+            <div
+              className="
+                h-4 w-full
+                animate-pulse
+                rounded
+                bg-slate-200
+                dark:bg-slate-800
+              "
+            />
+
+            <div
+              className="
+                h-4 w-5/6
+                animate-pulse
+                rounded
+                bg-slate-200
+                dark:bg-slate-800
+              "
+            />
+
+            <div
+              className="
+                h-4 w-2/3
+                animate-pulse
+                rounded
+                bg-slate-200
+                dark:bg-slate-800
+              "
+            />
+          </div>
+
+          <div
+            className="
+              mt-6 grid gap-4
+              sm:grid-cols-3
+            "
+          >
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="
+                  h-24
+                  animate-pulse
+                  rounded-xl
+                  bg-slate-100
+                  dark:bg-slate-800
+                "
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Assignment Skeleton */}
+        <div
+          className="
+            mt-5 h-40
+            animate-pulse
+            rounded-xl
+            bg-slate-200
+            dark:bg-slate-800
+          "
+        />
+
+        {/* Comments Skeleton */}
+        <div
+          className="
+            mt-5 h-56
+            animate-pulse
+            rounded-xl
+            bg-slate-200
+            dark:bg-slate-800
+          "
+        />
       </div>
     );
   }
+
+  /* --------------------------------------------------
+   * Error State
+   * -------------------------------------------------- */
 
   if (isError || !task) {
     return (
-      <div className="mx-auto max-w-5xl p-6">
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
-          <h2 className="font-semibold text-red-800">
-            Unable to load task
-          </h2>
+      <div
+        className="
+          rounded-xl
+          border border-red-200
+          bg-red-50 p-6
+          dark:border-red-900/50
+          dark:bg-red-950/30
+        "
+      >
+        <h2
+          className="
+            font-semibold
+            text-red-700
+            dark:text-red-400
+          "
+        >
+          Unable to load task
+        </h2>
 
-          <p className="mt-1 text-sm text-red-600">
-            The task may not exist or you may not
-            have access to it.
-          </p>
+        <p
+          className="
+            mt-1 text-sm
+            text-red-600
+            dark:text-red-400
+          "
+        >
+          Something went wrong while loading this task.
+          The task may not exist or you may not have
+          access to it.
+        </p>
 
-          <div className="mt-4 flex gap-3">
-            <button
-              type="button"
-              onClick={() => refetch()}
-              className="rounded-lg bg-red-700 px-4 py-2 text-sm font-medium text-white"
-            >
-              Try Again
-            </button>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="
+              rounded-lg
+              bg-red-600 px-4 py-2.5
+              text-sm font-medium text-white
+              transition hover:bg-red-700
+            "
+          >
+            Try Again
+          </button>
 
-            <button
-              type="button"
-              onClick={() =>
-                navigate(-1)
-              }
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700"
-            >
-              Go Back
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="
+              inline-flex
+              items-center gap-2
+              rounded-lg
+              border border-slate-300
+              bg-white px-4 py-2.5
+              text-sm font-medium
+              text-slate-700
+              transition hover:bg-slate-50
+              dark:border-slate-700
+              dark:bg-slate-900
+              dark:text-slate-300
+              dark:hover:bg-slate-800
+            "
+          >
+            <ArrowLeft size={16} />
+            Go Back
+          </button>
         </div>
       </div>
     );
   }
 
+  /* --------------------------------------------------
+   * Page
+   * -------------------------------------------------- */
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
+    <div>
+      {/* ------------------------------------------------
+          Header
+      ------------------------------------------------ */}
+
+      <div
+        className="
+          mb-8 flex flex-col gap-4
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+        "
+      >
+        <div className="flex min-w-0 items-start gap-3">
           <button
             type="button"
-            onClick={() =>
-              navigate(-1)
-            }
-            className="mt-1 rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+            onClick={() => navigate(-1)}
+            aria-label="Go back"
+            className="
+              mt-1 shrink-0
+              rounded-lg p-2
+              text-slate-500
+              transition
+              hover:bg-slate-100
+              hover:text-slate-800
+              dark:text-slate-400
+              dark:hover:bg-slate-800
+              dark:hover:text-slate-200
+            "
           >
             <ArrowLeft size={20} />
           </button>
 
-          <div>
-            <p className="text-sm text-slate-500">
+          <div className="min-w-0">
+            <p
+              className="
+                text-sm
+                text-slate-500
+                dark:text-slate-400
+              "
+            >
               Task Details
             </p>
 
-            <h1 className="mt-1 text-2xl font-bold text-slate-900">
+            <h1
+              className="
+                mt-1 truncate
+                text-2xl font-bold
+                text-slate-900
+                dark:text-white
+              "
+              title={task.title}
+            >
               {task.title}
             </h1>
           </div>
@@ -131,48 +393,126 @@ const TaskDetails = () => {
 
         <button
           type="button"
-          onClick={() =>
-            setEditModalOpen(true)
-          }
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          onClick={() => setEditModalOpen(true)}
+          className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+            rounded-lg
+            border border-slate-300
+            bg-white px-4 py-2.5
+            text-sm font-medium
+            text-slate-700
+            transition
+            hover:bg-slate-50
+            dark:border-slate-700
+            dark:bg-slate-900
+            dark:text-slate-300
+            dark:hover:bg-slate-800
+          "
         >
           <Pencil size={16} />
           Edit Task
         </button>
       </div>
 
-      {/* Task Information */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-900">
+      {/* ------------------------------------------------
+          Task Information
+      ------------------------------------------------ */}
+
+      <section
+        className="
+          rounded-xl
+          border border-slate-200
+          bg-white p-6
+          dark:border-slate-800
+          dark:bg-slate-900
+        "
+      >
+        <h2
+          className="
+            text-lg font-semibold
+            text-slate-900
+            dark:text-white
+          "
+        >
           Task Information
         </h2>
 
+        {/* Description */}
+
         <div className="mt-5">
-          <p className="mb-2 text-sm font-medium text-slate-500">
+          <p
+            className="
+              mb-2 text-sm font-medium
+              text-slate-500
+              dark:text-slate-400
+            "
+          >
             Description
           </p>
 
-          <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
-            {task.description ||
-              "No description provided."}
+          <p
+            className="
+              whitespace-pre-wrap
+              text-sm leading-6
+              text-slate-700
+              dark:text-slate-300
+            "
+          >
+            {task.description || "No description provided."}
           </p>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+        {/* Metadata */}
+
+        <div
+          className="
+            mt-6 grid gap-4
+            sm:grid-cols-3
+          "
+        >
+          {/* Status */}
+
+          <div
+            className="
+              rounded-xl
+              bg-slate-50 p-4
+              dark:bg-slate-800/60
+            "
+          >
+            <p
+              className="
+                text-xs font-medium
+                uppercase tracking-wide
+                text-slate-400
+              "
+            >
               Status
             </p>
 
             <div className="mt-2">
-              <TaskStatusBadge
-                status={task.status}
-              />
+              <TaskStatusBadge status={task.status} />
             </div>
           </div>
 
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+          {/* Priority */}
+
+          <div
+            className="
+              rounded-xl
+              bg-slate-50 p-4
+              dark:bg-slate-800/60
+            "
+          >
+            <p
+              className="
+                text-xs font-medium
+                uppercase tracking-wide
+                text-slate-400
+              "
+            >
               Priority
             </p>
 
@@ -183,38 +523,81 @@ const TaskDetails = () => {
             </div>
           </div>
 
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+          {/* Due Date */}
+
+          <div
+            className="
+              rounded-xl
+              bg-slate-50 p-4
+              dark:bg-slate-800/60
+            "
+          >
+            <p
+              className="
+                text-xs font-medium
+                uppercase tracking-wide
+                text-slate-400
+              "
+            >
               Due Date
             </p>
 
-            <div className="mt-2 flex items-center gap-2 text-sm text-slate-700">
-              <CalendarDays size={16} />
+            <div
+              className="
+                mt-2 flex items-center
+                gap-2 text-sm
+                text-slate-700
+                dark:text-slate-300
+              "
+            >
+              <CalendarDays
+                size={16}
+                className="
+                  text-slate-500
+                  dark:text-slate-400
+                "
+              />
 
               {task.dueDate
-                ? new Date(
-                    task.dueDate
-                  ).toLocaleDateString()
+                ? new Date(task.dueDate).toLocaleDateString()
                 : "No due date"}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Assignment */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
+      {/* ------------------------------------------------
+          Assignment
+      ------------------------------------------------ */}
+
+      <section
+        className="
+          mt-5
+          rounded-xl
+          border border-slate-200
+          bg-white p-6
+          dark:border-slate-800
+          dark:bg-slate-900
+        "
+      >
         <TaskAssignment task={task} />
       </section>
 
-      {/* Comments */}
-      <CommentSection taskId={task.id} />
+      {/* ------------------------------------------------
+          Comments
+      ------------------------------------------------ */}
 
-      {/* Edit Modal */}
+      <div className="mt-5">
+        <CommentSection taskId={task.id} />
+      </div>
+
+      {/* ------------------------------------------------
+          Edit Task Modal
+      ------------------------------------------------ */}
+
       <TaskFormModal
         open={editModalOpen}
-        onClose={() =>
-          setEditModalOpen(false)
-        }
+        onClose={() => setEditModalOpen(false)}
         projectId={task.projectId}
         task={task}
       />
