@@ -9,6 +9,8 @@ import { store } from "./redux/store";
 
 import "./index.css";
 
+import ThemeProvider from "./features/ui/ThemeProvider";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,7 +28,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+         <ThemeProvider>
           <App />
+          </ThemeProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

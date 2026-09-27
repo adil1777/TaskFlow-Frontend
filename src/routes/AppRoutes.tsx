@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -8,6 +8,8 @@ import Register from "../pages/auth/Register";
 import Organizations from "../pages/organizations/Organizations";
 import OrganizationWorkspace from "../pages/organizations/OrganizationWorkspace";
 import OrganizationMembers from "../pages/organizations/OrganizationMembers";
+import OrganizationRoute from "./OrganizationRoute";
+import WorkspaceLayout from "../components/layout/WorkspaceLayout";
 
 const AppRoutes = () => {
   return (
@@ -19,24 +21,24 @@ const AppRoutes = () => {
           <Route path="/register" element={<Register />} />
         </Route>
       </Route>
-
       <Route element={<ProtectedRoute />}>
-        <Route path="/organizations" element={<div>Organizations</div>} />
+        <Route path="/organizations" element={<Organizations />} />
+
+        <Route element={<OrganizationRoute />}>
+          <Route
+            path="/organizations/:organizationId"
+            element={<WorkspaceLayout />}
+          >
+            <Route index element={<OrganizationWorkspace />} />
+
+            <Route path="members" element={<OrganizationMembers />} />
+
+            <Route path="projects" element={<div>Projects</div>} />
+
+            <Route path="settings" element={<div>Settings</div>} />
+          </Route>
+        </Route>
       </Route>
-
-      <Route path="/" element={<Navigate to="/organizations" replace />} />
-
-      <Route path="/organizations" element={<Organizations />} />
-
-      <Route
-        path="/organizations/:organizationId"
-        element={<OrganizationWorkspace />}
-      />
-
-      <Route
-        path="/organizations/:organizationId/members"
-        element={<OrganizationMembers />}
-      />
 
       <Route path="*" element={<div className="p-10">Page not found</div>} />
     </Routes>
