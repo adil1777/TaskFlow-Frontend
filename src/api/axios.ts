@@ -1,97 +1,61 @@
 import axios, {
-  type AxiosError
+  type AxiosError,
+  type InternalAxiosRequestConfig,
 } from "axios";
 
-import { authStorage } from "../services/authStorage";
-import { store } from "../redux/store";
-import { updateAccessToken } from "../redux/slices/authSlice";
-import { logout as logoutAction } from "../redux/slices/authSlice";
-import { clearOrganization } from "../redux/slices/organizationSlice";
-import type { RefreshResponse, RetryableRequestConfig } from "../utils/types/auth";
+import {
+  API_CONFIG,
+} from "../utils/constants/app.constants";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL;
+import {
+  authStorage,
+} from "../services/authStorage";
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_CONFIG.BASE_URL,
+
+  timeout: API_CONFIG.TIMEOUT,
+
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 const refreshClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_CONFIG.BASE_URL,
+
+  timeout: API_CONFIG.TIMEOUT,
+
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+let isRefreshing = false;
 
-let refreshPromise: Promise<string> | null = null;
+let refreshSubscribers: Array<
+  (token: string) => void
+> = [];
 
-const clearAuthentication = (): void => {
-  authStorage.clearAuth();
-
-  store.dispatch(logoutAction());
-  store.dispatch(clearOrganization());
-
-  if (
-    window.location.pathname !== "/login"
-  ) {
-    window.location.replace("/login");
-  }
+const subscribeToRefresh = (
+  callback: (token: string) => void
+) => {
+  refreshSubscribers.push(callback);
 };
 
-const refreshAccessToken =
-  async (): Promise<string> => {
-    const storedRefreshToken =
-      authStorage.getRefreshToken();
+const notifyRefreshSubscribers = (
+  token: string
+) => {
+  refreshSubscribers.forEach(
+    (callback) => callback(token)
+  );
 
-    if (!storedRefreshToken) {
-      throw new Error(
-        "Refresh token is not available"
-      );
-    }
+  refreshSubscribers = [];
+};
 
-    const response =
-      await refreshClient.post<RefreshResponse>(
-        "/auth/refresh",
-        {
-          refreshToken:
-            storedRefreshToken,
-        }
-      );
-
-    const newAccessToken =
-      response.data.data?.accessToken ??
-      response.data.accessToken;
-
-    const newRefreshToken =
-      response.data.data?.refreshToken ??
-      response.data.refreshToken;
-
-    if (!newAccessToken) {
-      throw new Error(
-        "Refresh response did not contain an access token"
-      );
-    }
-
-    authStorage.setAccessToken(
-      newAccessToken
-    );
-
-    store.dispatch(
-      updateAccessToken(newAccessToken)
-    );
-
-    if (newRefreshToken) {
-      authStorage.setRefreshToken(
-        newRefreshToken
-      );
-    }
-
-    return newAccessToken;
-  };
+const clearRefreshSubscribers = () => {
+  refreshSubscribers = [];
+};
 
 api.interceptors.request.use(
   (config) => {
@@ -105,7 +69,8 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) =>
+    Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -114,13 +79,13 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest =
       error.config as
-        | RetryableRequestConfig
-        | undefined;
+        | InternalAxiosRequestConfig & {
+            _retry?: boolean;
+          };
 
     if (
       error.response?.status !== 401 ||
-      !originalRequest ||
-      originalRequest._retry
+      originalRequest?._retry
     ) {
       return Promise.reject(error);
     }
@@ -130,39 +95,87 @@ api.interceptors.response.use(
         "/auth/refresh"
       )
     ) {
-      clearAuthentication();
+      return Promise.reject(error);
+    }
+
+    const refreshToken =
+      authStorage.getRefreshToken();
+
+    if (!refreshToken) {
+      authStorage.clearSession();
 
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
 
+    if (isRefreshing) {
+      return new Promise(
+        (resolve, reject) => {
+          subscribeToRefresh(
+            (newAccessToken) => {
+              if (
+                !originalRequest.headers
+              ) {
+                originalRequest.headers = {};
+              }
+
+              originalRequest.headers.Authorization =
+                `Bearer ${newAccessToken}`;
+
+              resolve(
+                api(originalRequest)
+              );
+            }
+          );
+
+          setTimeout(() => {
+            reject(error);
+          }, 15_000);
+        }
+      );
+    }
+
+    isRefreshing = true;
+
     try {
-      if (!refreshPromise) {
-        refreshPromise =
-          refreshAccessToken().finally(() => {
-            refreshPromise = null;
-          });
-      }
+      const response =
+        await refreshClient.post<{
+          accessToken: string;
+        }>(
+          "/auth/refresh",
+          {
+            refreshToken,
+          }
+        );
 
       const newAccessToken =
-        await refreshPromise;
+        response.data.accessToken;
 
-      originalRequest.headers =
-        originalRequest.headers ?? {};
+      authStorage.updateAccessToken(
+        newAccessToken
+      );
+
+      notifyRefreshSubscribers(
+        newAccessToken
+      );
 
       originalRequest.headers.Authorization =
         `Bearer ${newAccessToken}`;
 
       return api(originalRequest);
     } catch (refreshError) {
-      clearAuthentication();
+      clearRefreshSubscribers();
+
+      authStorage.clearSession();
 
       return Promise.reject(
         refreshError
       );
+    } finally {
+      isRefreshing = false;
     }
   }
 );
 
-export default api;
+export { api };

@@ -13,10 +13,11 @@ export interface Project {
   organizationId: string;
   name: string;
   description: string | null;
+  managerId: string | null;
   deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
-  organization: {
+  organization?: {
     id: string;
     name: string;
   };

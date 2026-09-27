@@ -1,15 +1,15 @@
 import type z from "zod";
-import type { registerSchema } from "../validations/registerSchema";
-import type { OrgRole } from "./role";
+import type { OrgRole, SystemRole } from "./role";
 import type { AxiosRequestConfig } from "axios";
+import type { LoginSchema, registerSchema } from "../validations/authSchema";
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type LoginFormData = z.infer<typeof LoginSchema>;
 
 export interface RegisterPayload {
   name: string;
   email: string;
   password: string;
-  organizationName: string;
 }
 
 export interface LoginPayload {
@@ -17,10 +17,40 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface AuthLoginPayload {
-  user: User;
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+  };
+}
+
+export interface LoginResponse {
   accessToken: string;
   refreshToken?: string;
+  user: User;
+
+  organization?: {
+    id: string;
+    name: string;
+    role: "org_admin" | "member";
+  };
+}
+
+export interface RefreshResponse {
+  session?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
+
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+export interface UIState {
+  sidebarOpen: boolean;
+  theme: "light" | "dark";
+  globalLoading: boolean;
 }
 
 export type Role = OrgRole;
@@ -29,20 +59,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  data: {
-    user: User;
-    organization: {
-      id: string;
-      role: OrgRole;
-    };
-    accessToken: string;
-    refreshToken: string;
-  };
+  systemRole: SystemRole;
 }
 
 export interface AuthState {
@@ -52,28 +69,24 @@ export interface AuthState {
   isAuthenticated: boolean;
 }
 
+export interface CurrentOrganization {
+  id: string;
+  name: string;
+  role: OrgRole;
+}
+
 export interface OrganizationState {
   organizationId: string | null;
+  organizationName: string | null;
   role: OrgRole | null;
 }
 
-export interface UIState {
-  sidebarOpen: boolean;
-  theme: "light" | "dark";
-  globalLoading: boolean;
-}
-
-export interface RetryableRequestConfig
-  extends AxiosRequestConfig {
+export interface RetryableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 
-export interface RefreshResponse {
-  data?: {
-    accessToken?: string;
-    refreshToken?: string;
-  };
-
-  accessToken?: string;
-  refreshToken?: string;
+export interface AuthOrganization {
+  id: string;
+  name: string;
+  role: OrgRole;
 }

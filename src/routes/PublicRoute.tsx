@@ -1,28 +1,22 @@
 import {
   Navigate,
   Outlet,
-  useLocation,
 } from "react-router-dom";
 import { useAppSelector } from "../redux/hooks";
 import { selectIsAuthenticated } from "../features/auth/auth.selectors";
 
 
-const ProtectedRoute = () => {
-  const location = useLocation();
-
+const PublicRoute = () => {
   const isAuthenticated =
     useAppSelector(
       selectIsAuthenticated
     );
 
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return (
       <Navigate
-        to="/login"
+        to="/organizations"
         replace
-        state={{
-          from: location,
-        }}
       />
     );
   }
@@ -30,4 +24,4 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
-export default ProtectedRoute;
+export default PublicRoute;

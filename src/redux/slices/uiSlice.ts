@@ -3,12 +3,16 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 
-import type { UIState } from "../../utils/types/auth";
+import type { Theme } from "../../services/themeStorage";
+
+interface UIState {
+  sidebarOpen: boolean;
+  theme: Theme;
+}
 
 const initialState: UIState = {
   sidebarOpen: true,
   theme: "light",
-  globalLoading: false,
 };
 
 const uiSlice = createSlice({
@@ -28,25 +32,18 @@ const uiSlice = createSlice({
       state.sidebarOpen = action.payload;
     },
 
+    setTheme: (
+      state,
+      action: PayloadAction<Theme>
+    ) => {
+      state.theme = action.payload;
+    },
+
     toggleTheme: (state) => {
       state.theme =
         state.theme === "light"
           ? "dark"
           : "light";
-    },
-
-    setTheme: (
-      state,
-      action: PayloadAction<"light" | "dark">
-    ) => {
-      state.theme = action.payload;
-    },
-
-    setGlobalLoading: (
-      state,
-      action: PayloadAction<boolean>
-    ) => {
-      state.globalLoading = action.payload;
     },
   },
 });
@@ -54,9 +51,8 @@ const uiSlice = createSlice({
 export const {
   toggleSidebar,
   setSidebarOpen,
-  toggleTheme,
   setTheme,
-  setGlobalLoading,
+  toggleTheme,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

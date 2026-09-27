@@ -17,7 +17,7 @@ import type {
 } from "../utils/types/task";
 
 import { taskQueryKeys } from "../utils/query/queryKeys";
-import { useAuth } from "./useAuth";
+import { useAuth } from "./auth/useAuth";
 
 export const useProjectTasks = (
   projectId: string,

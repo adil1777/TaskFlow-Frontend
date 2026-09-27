@@ -1,28 +1,15 @@
 export type Theme = "light" | "dark";
 
-const THEME_STORAGE_KEY = "theme";
+const THEME_KEY = "taskflow_theme";
 
 export const themeStorage = {
   getTheme(): Theme {
-    const storedTheme = localStorage.getItem(
-      THEME_STORAGE_KEY
-    );
+    const theme = localStorage.getItem(THEME_KEY);
 
-    return storedTheme === "dark"
-      ? "dark"
-      : "light";
+    return theme === "dark" ? "dark" : "light";
   },
 
-  setTheme(theme: Theme): void {
-    localStorage.setItem(
-      THEME_STORAGE_KEY,
-      theme
-    );
-  },
-
-  clearTheme(): void {
-    localStorage.removeItem(
-      THEME_STORAGE_KEY
-    );
+  setTheme(theme: Theme) {
+    localStorage.setItem(THEME_KEY, theme);
   },
 };

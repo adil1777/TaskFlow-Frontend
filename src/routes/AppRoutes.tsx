@@ -1,40 +1,29 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
+import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import Dashboard from "../pages/dashboard/Dashboard";
-import NotFound from "../pages/NotFound";
-
-import ProtectedRoute from "./ProtectedRoute";
-import DashboardLayout from "../layouts/DashboardLayout";
-import Projects from "../pages/projects/Projects";
-import ProjectDetails from "../pages/projects/ProjectDetails";
-import TaskDetails from "../pages/tasks/TaskDetails";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route element={<PublicRoute />}>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<DashboardLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
-          <Route path="/dashboard" element={<Dashboard />} />
-
-          <Route path="/projects" element={<Projects />} />
-
-          <Route path="/projects/:projectId" element={<ProjectDetails />} />
-
-          <Route path="/tasks/:taskId" element={<TaskDetails />} />
-
+          <Route path="/register" element={<Register />} />
         </Route>
       </Route>
 
-      <Route path="*" element={<NotFound />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/organizations" element={<div>Organizations</div>} />
+      </Route>
+
+      <Route path="/" element={<Navigate to="/organizations" replace />} />
+
+      <Route path="*" element={<div className="p-10">Page not found</div>} />
     </Routes>
   );
 };

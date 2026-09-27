@@ -7,51 +7,10 @@ import uiReducer from "./slices/uiSlice";
 import { authStorage } from "../services/authStorage";
 import { themeStorage } from "../services/themeStorage";
 
-import type {
-  AuthState,
-  OrganizationState,
-  UIState,
-} from "../utils/types/auth";
-
-const accessToken =
-  authStorage.getAccessToken();
-
-const refreshToken =
-  authStorage.getRefreshToken();
-
-const user =
-  authStorage.getUser();
-
-const organizationId =
-  authStorage.getOrganizationId();
-
-const role =
-  authStorage.getRole();
-
-const isAuthenticated = Boolean(
-  accessToken &&
-    user &&
-    organizationId &&
-    role
-);
-
-const preloadedAuthState: AuthState = {
-  user: user ?? null,
-  accessToken: accessToken ?? null,
-  refreshToken: refreshToken ?? null,
-  isAuthenticated,
-};
-
-const preloadedOrganizationState: OrganizationState = {
-  organizationId: organizationId ?? null,
-  role: role ?? null,
-};
-
-const preloadedUIState: UIState = {
-  sidebarOpen: true,
-  theme: themeStorage.getTheme(),
-  globalLoading: false,
-};
+const user = authStorage.getUser();
+const accessToken = authStorage.getAccessToken();
+const refreshToken = authStorage.getRefreshToken();
+const organization = authStorage.getOrganization();
 
 export const store = configureStore({
   reducer: {
@@ -61,9 +20,29 @@ export const store = configureStore({
   },
 
   preloadedState: {
-    auth: preloadedAuthState,
-    organization: preloadedOrganizationState,
-    ui: preloadedUIState,
+    auth: {
+      user,
+      accessToken,
+      refreshToken,
+      isAuthenticated: Boolean(
+        user && accessToken
+      ),
+    },
+
+    organization: {
+      organizationId:
+        organization?.id ?? null,
+
+      organizationName:
+        organization?.name ?? null,
+
+      role: organization?.role ?? null,
+    },
+
+    ui: {
+      sidebarOpen: true,
+      theme: themeStorage.getTheme(),
+    },
   },
 });
 

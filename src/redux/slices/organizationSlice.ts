@@ -1,40 +1,45 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { OrganizationState } from "../../utils/types/auth";
-import type { OrgRole } from "../../utils/types/role";
+import {
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+
+import type {
+  CurrentOrganization,
+  OrganizationState,
+} from "../../utils/types/auth";
 
 const initialState: OrganizationState = {
   organizationId: null,
+  organizationName: null,
   role: null,
 };
 
 const organizationSlice = createSlice({
   name: "organization",
-  initialState,
-  reducers: {
-    setOrganization: (
-      state,
-      action: PayloadAction<{
-        organizationId: string;
-        role: OrgRole;
-      }>
-    ) => {
 
-      state.organizationId = action.payload.organizationId;
+  initialState,
+
+  reducers: {
+    setCurrentOrganization: (
+      state,
+      action: PayloadAction<CurrentOrganization>
+    ) => {
+      state.organizationId = action.payload.id;
+      state.organizationName = action.payload.name;
       state.role = action.payload.role;
     },
 
-    clearOrganization: (state) => {
+    clearCurrentOrganization: (state) => {
       state.organizationId = null;
+      state.organizationName = null;
       state.role = null;
-    },
-
-    updateOrganizationRole: (state, action: PayloadAction<OrgRole>) => {
-      state.role = action.payload;
     },
   },
 });
 
-export const { setOrganization, clearOrganization, updateOrganizationRole } =
-  organizationSlice.actions;
+export const {
+  setCurrentOrganization,
+  clearCurrentOrganization,
+} = organizationSlice.actions;
 
 export default organizationSlice.reducer;

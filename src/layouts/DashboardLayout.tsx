@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "../redux/hooks";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/auth/useAuth";
 
 import DashboardHeader from "../components/layout/DashboardHeader";
 import Sidebar from "../components/layout/Sidebar";
@@ -11,13 +11,9 @@ const DashboardLayout = () => {
 
   const { logout } = useAuth();
 
-  const user = useAppSelector(
-    (state) => state.auth.user
-  );
+  const user = useAppSelector((state) => state.auth.user);
 
-  const role = useAppSelector(
-    (state) => state.organization.role
-  );
+  const role = useAppSelector((state) => state.organization.role);
 
   const handleLogout = () => {
     logout();
@@ -37,15 +33,9 @@ const DashboardLayout = () => {
         dark:text-white
       "
     >
-      <DashboardHeader
-        userName={user?.name}
-        role={role}
-      />
+      <DashboardHeader userName={user?.name} role={role} />
 
-      <Sidebar
-        role={role}
-        onLogout={handleLogout}
-      />
+      <Sidebar role={role} onLogout={handleLogout} />
 
       <div className="lg:pl-64">
         <main className="pt-16 lg:pt-0">

@@ -1,32 +1,49 @@
-import api from "./axios";
+import {api} from "./axios";
+
 import type {
-  AuthResponse,
   LoginPayload,
+  LoginResponse,
+  RefreshResponse,
   RegisterPayload,
+  RegisterResponse,
 } from "../utils/types/auth";
 
-export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
+export const loginApi = async (
+  payload: LoginPayload
+): Promise<LoginResponse> => {
   const response = await api.post("/auth/login", payload);
 
   return response.data;
 };
 
-export const register = async (
+export const registerApi = async (
   payload: RegisterPayload
-): Promise<AuthResponse> => {
+): Promise<RegisterResponse> => {
   const response = await api.post("/auth/register", payload);
 
   return response.data;
 };
 
-export const refreshToken = async () => {
-  const response = await api.post("/auth/refresh");
+export const refreshAccessTokenApi = async (
+  refreshToken: string
+) => {
+  const response =
+    await api.post<RefreshResponse>(
+      "/auth/refresh",
+      {
+        refreshToken,
+      }
+    );
 
   return response.data;
 };
 
-export const logout = async () => {
-  const response = await api.post("/auth/logout");
+export const logoutApi = async (
+  refreshToken: string
+) => {
+  const response = await api.post("/auth/logout", {
+    refreshToken,
+  });
 
   return response.data;
 };
