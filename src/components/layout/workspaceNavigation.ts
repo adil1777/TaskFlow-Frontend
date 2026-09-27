@@ -5,7 +5,8 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
-import type { OrgRole } from "../utils/types/role";
+import type { OrgRole } from "../../utils/types/role";
+
 
 export interface NavigationItem {
   label: string;

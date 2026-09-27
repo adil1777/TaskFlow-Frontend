@@ -1,14 +1,11 @@
 import { Outlet, useNavigate } from "react-router-dom";
-
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-
-import { setSidebarOpen } from "../redux/slices/uiSlice";
-
-import { selectCurrentUser } from "../features/auth/auth.selectors";
-import { selectCurrentOrganizationRole } from "../hooks/organization/organization.selectors";
-import { useLogout } from "../hooks/auth/useLogout";
 import WorkspaceHeader from "./WorkspaceHeader";
 import WorkspaceSidebar from "./WorkspaceSidebar";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectCurrentUser } from "../../features/auth/auth.selectors";
+import { selectCurrentOrganizationRole } from "../../hooks/organization/organization.selectors";
+import { useLogout } from "../../hooks/auth/useLogout";
+import { setSidebarOpen } from "../../redux/slices/uiSlice";
 
 const WorkspaceLayout = () => {
   const dispatch = useAppDispatch();

@@ -25,7 +25,6 @@ const Register = () => {
     defaultValues: {
       name: "",
       email: "",
-      organizationName: "",
       password: "",
       confirmPassword: "",
     },

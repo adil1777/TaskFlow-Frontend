@@ -3,10 +3,11 @@ import { NavLink } from "react-router-dom";
 import { X } from "lucide-react";
 
 import { getWorkspaceNavigation } from "./workspaceNavigation";
-import type { OrgRole } from "../utils/types/role";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { selectCurrentOrganizationId } from "../hooks/organization/organization.selectors";
-import { setSidebarOpen } from "../redux/slices/uiSlice";
+import type { OrgRole } from "../../utils/types/role";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { selectCurrentOrganizationId } from "../../hooks/organization/organization.selectors";
+import { setSidebarOpen } from "../../redux/slices/uiSlice";
+
 
 interface WorkspaceSidebarProps {
   role: OrgRole | null;

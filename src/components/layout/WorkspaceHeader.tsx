@@ -1,10 +1,9 @@
 import { Menu, Moon, Sun } from "lucide-react";
-import type { User } from "../utils/types/auth";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { toggleSidebar, toggleTheme } from "../redux/slices/uiSlice";
-import OrganizationSwitcher from "../pages/organizations/OrganizationSwitcher";
-import type { OrgRole } from "../utils/types/role";
-
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import type { User } from "../../utils/types/auth";
+import type { OrgRole } from "../../utils/types/role";
+import { toggleSidebar, toggleTheme } from "../../redux/slices/uiSlice";
+import OrganizationSwitcher from "../../pages/organizations/OrganizationSwitcher";
 interface WorkspaceHeaderProps {
   user: User | null;
   role: OrgRole | null;
