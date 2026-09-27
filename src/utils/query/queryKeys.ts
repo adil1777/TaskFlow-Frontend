@@ -1,15 +1,14 @@
 export const projectQueryKeys = {
   all: ["projects"] as const,
 
-  lists: () => [...projectQueryKeys.all, "list"] as const,
+  list: (organizationId: string) =>
+    [...projectQueryKeys.all, "list", organizationId] as const,
 
-  list: (organizationId: string, page: number, limit: number) =>
-    [...projectQueryKeys.lists(), organizationId, page, limit] as const,
+  detail: (projectId: string) =>
+    [...projectQueryKeys.all, "detail", projectId] as const,
 
-  details: () => [...projectQueryKeys.all, "detail"] as const,
-
-  detail: (organizationId: string, projectId: string) =>
-    [...projectQueryKeys.details(), organizationId, projectId] as const,
+  members: (projectId: string) =>
+    [...projectQueryKeys.all, "members", projectId] as const,
 };
 
 export const taskQueryKeys = {
@@ -47,23 +46,11 @@ export const dashboardQueryKeys = {
 export const organizationQueryKeys = {
   all: ["organizations"] as const,
 
-  list: () =>
-    [
-      ...organizationQueryKeys.all,
-      "list",
-    ] as const,
+  list: () => [...organizationQueryKeys.all, "list"] as const,
 
   detail: (organizationId: string) =>
-    [
-      ...organizationQueryKeys.all,
-      "detail",
-      organizationId,
-    ] as const,
+    [...organizationQueryKeys.all, "detail", organizationId] as const,
 
   members: (organizationId: string) =>
-    [
-      ...organizationQueryKeys.all,
-      "members",
-      organizationId,
-    ] as const,
+    [...organizationQueryKeys.all, "members", organizationId] as const,
 };

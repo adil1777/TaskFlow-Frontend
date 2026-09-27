@@ -13,4 +13,11 @@ export const createProjectSchema = z.object({
     .max(500, "Description cannot exceed 500 characters")
     .optional()
     .or(z.literal("")),
-});
+
+     managerId: z
+      .string()
+      .uuid()
+      .optional()
+      .or(z.literal("")),
+}).strict();
+

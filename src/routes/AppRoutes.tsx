@@ -10,6 +10,8 @@ import OrganizationWorkspace from "../pages/organizations/OrganizationWorkspace"
 import OrganizationMembers from "../pages/organizations/OrganizationMembers";
 import OrganizationRoute from "./OrganizationRoute";
 import WorkspaceLayout from "../components/layout/WorkspaceLayout";
+import Projects from "../pages/projects/Projects";
+import ProjectDetails from "../pages/projects/ProjectDetails";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +25,10 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route path="/organizations" element={<Organizations />} />
+        <Route
+          path="projects/:projectId/members"
+          element={<ProjectMembers />}
+        />
 
         <Route element={<OrganizationRoute />}>
           <Route
@@ -36,6 +42,10 @@ const AppRoutes = () => {
             <Route path="projects" element={<div>Projects</div>} />
 
             <Route path="settings" element={<div>Settings</div>} />
+
+            <Route path="projects" element={<Projects />} />
+
+            <Route path="projects/:projectId" element={<ProjectDetails />} />
           </Route>
         </Route>
       </Route>
