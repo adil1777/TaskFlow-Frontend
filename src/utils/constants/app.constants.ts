@@ -3,7 +3,8 @@ export const APP_NAME = "TaskFlow";
 export const API_CONFIG = {
   BASE_URL:
     import.meta.env.VITE_API_BASE_URL ??
-    "https://taskflow-backend-nqwe.onrender.com/api/v1",
+    // "https://taskflow-backend-nqwe.onrender.com/api/v1",
+    "http://localhost:5000/api/v1",
 
   TIMEOUT: 15_000,
 } as const;

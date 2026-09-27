@@ -5,6 +5,9 @@ import PublicRoute from "./PublicRoute";
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import Organizations from "../pages/organizations/Organizations";
+import OrganizationWorkspace from "../pages/organizations/OrganizationWorkspace";
+import OrganizationMembers from "../pages/organizations/OrganizationMembers";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +25,18 @@ const AppRoutes = () => {
       </Route>
 
       <Route path="/" element={<Navigate to="/organizations" replace />} />
+
+      <Route path="/organizations" element={<Organizations />} />
+
+      <Route
+        path="/organizations/:organizationId"
+        element={<OrganizationWorkspace />}
+      />
+
+      <Route
+        path="/organizations/:organizationId/members"
+        element={<OrganizationMembers />}
+      />
 
       <Route path="*" element={<div className="p-10">Page not found</div>} />
     </Routes>

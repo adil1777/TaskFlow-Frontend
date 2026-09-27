@@ -1,15 +1,8 @@
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import {
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import {
-  zodResolver,
-} from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
@@ -20,18 +13,14 @@ import { registerSchema } from "../../utils/validations/authSchema";
 const Register = () => {
   const navigate = useNavigate();
 
-  const registerMutation =
-    useRegister();
+  const registerMutation = useRegister();
 
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-    },
+    formState: { errors },
   } = useForm<RegisterFormData>({
-    resolver:
-      zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema),
 
     defaultValues: {
       name: "",
@@ -42,9 +31,7 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (
-    values: RegisterFormData
-  ) => {
+  const onSubmit = async (values: RegisterFormData) => {
     try {
       await registerMutation.mutateAsync({
         name: values.name,
@@ -69,15 +56,11 @@ const Register = () => {
         </h2>
 
         <p className="mt-2 text-sm text-slate-500">
-          Start managing your organization
-          with TaskFlow.
+          Start managing your organization with TaskFlow.
         </p>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input
           id="name"
           label="Full name"
@@ -98,27 +81,12 @@ const Register = () => {
         />
 
         <Input
-          id="organizationName"
-          label="Organization"
-          placeholder="Acme Inc."
-          error={
-            errors.organizationName
-              ?.message
-          }
-          {...register(
-            "organizationName"
-          )}
-        />
-
-        <Input
           id="password"
           type="password"
           label="Password"
           placeholder="••••••••"
           autoComplete="new-password"
-          error={
-            errors.password?.message
-          }
+          error={errors.password?.message}
           {...register("password")}
         />
 
@@ -128,21 +96,11 @@ const Register = () => {
           label="Confirm password"
           placeholder="••••••••"
           autoComplete="new-password"
-          error={
-            errors.confirmPassword
-              ?.message
-          }
-          {...register(
-            "confirmPassword"
-          )}
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
         />
 
-        <Button
-          type="submit"
-          loading={
-            registerMutation.isPending
-          }
-        >
+        <Button type="submit" loading={registerMutation.isPending}>
           Create account
         </Button>
       </form>

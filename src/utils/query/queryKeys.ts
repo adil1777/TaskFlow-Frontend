@@ -43,3 +43,27 @@ export const dashboardQueryKeys = {
   project: (organizationId: string, projectId: string) =>
     [...dashboardQueryKeys.all, "project", organizationId, projectId] as const,
 };
+
+export const organizationQueryKeys = {
+  all: ["organizations"] as const,
+
+  list: () =>
+    [
+      ...organizationQueryKeys.all,
+      "list",
+    ] as const,
+
+  detail: (organizationId: string) =>
+    [
+      ...organizationQueryKeys.all,
+      "detail",
+      organizationId,
+    ] as const,
+
+  members: (organizationId: string) =>
+    [
+      ...organizationQueryKeys.all,
+      "members",
+      organizationId,
+    ] as const,
+};

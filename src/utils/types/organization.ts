@@ -24,3 +24,20 @@ export interface OrganizationMember {
     email: string;
   };
 }
+
+export interface CreateOrganizationPayload {
+  name: string;
+}
+
+export interface UpdateOrganizationPayload {
+  name?: string;
+}
+
+export interface AddOrganizationMemberPayload {
+  userId: string;
+  role: OrgRole;
+}
+
+export interface UpdateOrganizationMemberPayload {
+  role: OrgRole;
+}
