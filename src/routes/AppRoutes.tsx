@@ -12,6 +12,7 @@ import OrganizationRoute from "./OrganizationRoute";
 import WorkspaceLayout from "../components/layout/WorkspaceLayout";
 import Projects from "../pages/projects/Projects";
 import ProjectDetails from "../pages/projects/ProjectDetails";
+import ProjectMembers from "../pages/projects/ProjectMembers";
 
 const AppRoutes = () => {
   return (
@@ -25,10 +26,6 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route path="/organizations" element={<Organizations />} />
-        <Route
-          path="projects/:projectId/members"
-          element={<ProjectMembers />}
-        />
 
         <Route element={<OrganizationRoute />}>
           <Route
@@ -39,13 +36,16 @@ const AppRoutes = () => {
 
             <Route path="members" element={<OrganizationMembers />} />
 
-            <Route path="projects" element={<div>Projects</div>} />
-
-            <Route path="settings" element={<div>Settings</div>} />
-
             <Route path="projects" element={<Projects />} />
 
             <Route path="projects/:projectId" element={<ProjectDetails />} />
+
+            <Route
+              path="projects/:projectId/members"
+              element={<ProjectMembers />}
+            />
+
+            <Route path="settings" element={<div>Settings</div>} />
           </Route>
         </Route>
       </Route>

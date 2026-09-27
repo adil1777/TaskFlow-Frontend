@@ -39,3 +39,19 @@ export interface UpdateProjectPayload {
   name?: string;
   description?: string;
 }
+
+export interface ProjectMember {
+  id: string;
+  projectId: string;
+  userId: string;
+  createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface AddProjectMemberPayload {
+  userId: string;
+}

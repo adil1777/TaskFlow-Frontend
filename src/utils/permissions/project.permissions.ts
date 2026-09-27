@@ -6,11 +6,7 @@ export const isProjectManager = (
   project: Project | null | undefined,
   user: User | null | undefined
 ) => {
-  if (!project || !user) {
-    return false;
-  }
-
-  return project.managerId === user.id;
+  return Boolean(project && user && project.managerId === user.id);
 };
 
 export const canCreateProject = (organizationRole: OrgRole | null) => {
