@@ -7,6 +7,10 @@ export interface Organization {
   updatedAt: string;
 }
 
+export interface OrganizationListItem extends Organization {
+  role: OrgRole | null;
+}
+
 export interface OrganizationMembership {
   organizationId: string;
   organization: Organization;
@@ -17,7 +21,6 @@ export interface OrganizationMember {
   userId: string;
   organizationId: string;
   role: OrgRole;
-
   user: {
     id: string;
     name: string;

@@ -72,7 +72,7 @@ export interface AuthState {
 export interface CurrentOrganization {
   id: string;
   name: string;
-  role: OrgRole;
+  role: OrgRole | null;
 }
 
 export interface OrganizationState {

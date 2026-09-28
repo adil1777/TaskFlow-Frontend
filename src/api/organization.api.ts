@@ -4,13 +4,14 @@ import type {
   AddOrganizationMemberPayload,
   CreateOrganizationPayload,
   Organization,
+  OrganizationListItem,
   OrganizationMember,
   UpdateOrganizationMemberPayload,
   UpdateOrganizationPayload,
 } from "../utils/types/organization";
 
 export const getOrganizations = async () => {
-  const response = await api.get<Organization[]>("/organizations");
+  const response = await api.get<OrganizationListItem[]>("/organizations");
 
   return response.data;
 };

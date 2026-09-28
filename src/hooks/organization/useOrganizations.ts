@@ -8,9 +8,10 @@ import {
   updateOrganization,
 } from "../../api/organization.api";
 import { organizationQueryKeys } from "../../utils/query/queryKeys";
+import type { OrganizationListItem } from "../../utils/types/organization";
 
 export const useOrganizations = () => {
-  return useQuery({
+  return useQuery<OrganizationListItem[]>({
     queryKey: organizationQueryKeys.list(),
 
     queryFn: getOrganizations,
